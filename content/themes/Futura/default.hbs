@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{! Document Settings }}
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    {{! Page Meta }}
+    <title>{{meta_title}}</title>
+    <meta name="description" content="{{meta_description}}" />
+    <meta name="keywords" content="">
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="Ghost 0.5" />
+    <!-- fav icons -->
+    <link rel="shortcut icon" href="{{asset "favicon.ico"}}">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png?v=557d4971a9">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/images/apple-touch-icon-72x72.png?v=557d4971a9">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/images/apple-touch-icon-114x114.png?v=557d4971a9">
+
+    {{! Styles'n'Scripts }}
+    <!-- <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" /> -->
+
+    <!-- stylesheets -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400%7CRoboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{asset "css/bootstrap.min.css"}}">
+    <link rel="stylesheet" href="{{asset "css/font-awesome.min.css"}}">
+    <link rel="stylesheet" href="{{asset "css/screen.css"}}">
+    <link rel="stylesheet" href="{{asset "css/hl-styles/monokai_sublime.css"}}">
+
+    <!-- only for demo -->
+    <link rel="stylesheet" href="{{asset "demo-assets/css/colpick.css"}}">
+    <script>
+    /*====================================================
+      THEME SETTINGS & GLOBAL VARIABLES
+    ====================================================*/
+    //  1. Disqus comment settings
+    var disqus_shortname = 'futurathemedemo'; // required: replace example with your forum shortname
+
+    //  2. Sidebar Position
+    var sidebar_left = false; // Set true or flase for positioning sidebar on left
+
+    //  3. Recent Post count
+    var recent_post_count = 3;
+
+    //  4. Google+ badge settings
+    //var badge_type = 'page'; // person / page / community ----- three type of google badge
+    //var google_plus_url = 'https://plus.google.com/111813546240107028721';
+
+    //  5. Facebook Page Setting
+    //var facebook_page_url = 'https://www.facebook.com/gbjsolution';
+
+    //  6. Twitter Setting
+    //var twitter_url = 'https://twitter.com/gbjsolution';
+    //var twitter_widget_id = '428617072633843712';
+    //var number_of_tweet = 3;
+
+    //  7. Mailchimp signup form Setting
+    var mailchimp_form_url = 'http://gbjsolution.us4.list-manage.com/subscribe?u=a63b2fed3ed61b70bf56d1aed&id=1e3806b1d4';
+    var success_message = "Please check your inbox and confirm your email address. Thanks!";
+
+    //  8. Flickr Setting
+    //var flickr_id = '52617155@N08';
+    </script>
+    <link rel="canonical" href="http://futura-ghost.gbjsolution.com/" />
+    <link rel="next" href="http://futura-ghost.gbjsolution.com/page/2/" />
+    <link rel="alternate" type="application/rss+xml" title="Futura" href="http://futura-ghost.gbjsolution.com/rss/" />
+
+    {{! Ghost outputs important style and meta data with this tag }}
+    {{ghost_head}}
+</head>
+<body class="{{body_class}}">
+
+    {{navigation}}
+
+    <div class="site-wrapper">
+
+        {{! Everything else gets inserted here }}
+        {{{body}}}
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="{{@blog.url}}">{{@blog.title}}</a> &copy; {{date format="YYYY"}}</section>
+            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+        </footer>
+
+    </div>
+
+    {{! Ghost outputs important scripts and data with this tag }}
+    {{ghost_foot}}
+
+    {{! The main JavaScript file for Casper }}
+    <script type="text/javascript" src="{{asset "js/jquery.fitvids.js"}}"></script>
+    <!-- <script type="text/javascript" src="{{asset "js/index.js"}}"></script> -->
+
+    <script src="/public/jquery.min.js"></script>
+    <script src="{{asset "js/bootstrap.min.js"}}"></script>
+    <script src="{{asset "js/highlight.pack.js"}}"></script>
+    <script src="{{asset "js/main.js"}}"></script>
+    <!-- only for demo -->
+    <script src="{{asset "demo-assets/js/colpick.js"}}"></script>
+    <script src="{{asset "demo-assets/js/jquery.cookie.js"}}"></script>
+    <script src="{{asset "demo-assets/js/jquery.demoscript.js"}}"></script>
+
+</body>
+</html>
