@@ -25,7 +25,8 @@
     {{/if}}
     {{!-- 内容 --}}
     <div class="post-content">
-        <p>{{excerpt words="50"}}</p>
+        {{#if description}}<p>{{description}}</p>
+        {{else}}<p>{{excerpt characters="180"}}…</p>{{/if}}
     </div>
     <div class="post-permalink">
         <a href="{{url}}" class="btn btn-default" style="float: right">Continue Reading</a>
