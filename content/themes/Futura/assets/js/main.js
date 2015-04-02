@@ -14,29 +14,6 @@ var themeApp = {
 			$('.sidebar').addClass('col-md-pull-8');
 		}
 	},
-	tagcloud:function(){
-		var FEED_URL = "/rss/";
-		var primary_array = [];
-		var tag_num = {};
-		$.get(FEED_URL, function (data) {
-			$(data).find("category").each(function () {
-				var el = $(this).text();
-				if ($.inArray(el, primary_array) == -1) {
-					primary_array.push(el);
-					tag_num[el] = 1;
-				} else {
-					tag_num[el] +=1;
-				}
-			});
-			var formated_tag_list = "";
-			for ( var i = 0; i < primary_array.length; i = i + 1 ) {
-				var tag = primary_array[ i ];
-				var tagLink = tag.toLowerCase().replace(/ /g, '-');
-				formated_tag_list += ("<a href=\"/tag/" + tagLink + "\">" + tag +" ("+tag_num[tag]+") " + "</a>");
-			}
-			$('.tag-cloud').append(formated_tag_list);
-		});
-	},
 	recentPost:function() {
 		var feed_url = "/rss/";
 		var code = String('');
@@ -84,7 +61,6 @@ var themeApp = {
 	},
 	init: function() {
 		themeApp.sidebarConfig();
-		themeApp.tagcloud();
 		themeApp.recentPost();
 		themeApp.highlighter();
 		themeApp.backToTop();

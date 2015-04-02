@@ -38,6 +38,16 @@ meta_title = function (options) {
         } else {
             title = blog.title + pageString;
         }
+
+        if (this.relativeUrl){
+            if(this.relativeUrl === '/contact/'){
+                title = 'Contact Me - ' + blog.title;
+            } else if(this.relativeUrl === '/about/') {
+                title = 'About - ' + blog.title;
+            } else if(this.relativeUrl === '/archives/'){
+                title = 'Archives - ' + blog.title;
+            }
+        }
     }
     return filters.doFilter('meta_title', title).then(function (title) {
         title = title || '';

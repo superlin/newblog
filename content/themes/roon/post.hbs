@@ -1,0 +1,88 @@
+{{!< default}}
+
+{{#post}}
+
+    {{#if image}}
+        <div id="feature_image" class="horz show">
+            <div class="inner" style="background-image: url('{{image}}')">
+                <img src="{{image}}">
+            </div>
+        </div>
+    {{/if}}
+
+    <article role="main" class="{{#if image}}image{{/if}}">
+        <header>
+            <a href="{{@blog.url}}" id="home_link">«</a>
+            <div class="meta"><time datetime="{{date format='YYYY-MM-DD'}}"><a href="{{url}}">{{date format="YYYY年MM月DD日"}}</a></time> <span class="count" id="js-reading-time"></span></div>
+            <h1>{{title}}</h1>
+        </header>
+
+        <div class="text" id="js-post-content">
+            {{content}}
+        </div>
+
+        <menu>
+            <a href="" id="btn_share" class="btn" title="分享">
+                <span aria-hidden="true" data-icon="S"></span>
+                <strong>分享</strong>
+            </a>
+        </menu>
+
+
+    {{#author}}
+        <footer role="contentinfo">
+
+            <div class="vcard">
+                <a href="{{@blog.url}}/rss" id="btn_feed" class="btn" title="Feed" target="_blank">
+                    <span aria-hidden="true" data-icon=")"></span>
+                    <strong>Feed</strong>
+                </a>
+
+                {{#if image}}
+                <a href="{{url}}" class="photo">
+                    <span style="background-image: url('{{image}}');">
+                        <img src="{{image}}" alt="{{name}}">
+                    </span>
+                </a>
+                {{/if}}
+
+                <div class="details">
+                    <h4><a href="{{url}}" class="url n">{{name}}</a></h4>
+                    {{#if location}}{{location}}<br>{{/if}}
+                    {{#if website}}<a href="{{website}}" class="js-remove-domain-schema">{{website}}</a>{{/if}}
+                </div>
+            </div>
+
+            <div id="user_bio">
+                <div class="inner">
+                    {{!-- TODO: Parse HTML for links --}}
+                    {{bio}}
+                </div>
+            </div>
+
+        </footer>
+    {{/author}}
+
+    </article>
+
+    <div id="share_modal">
+        <div class="wrap">
+            <div class="inner">
+                <header>
+                    分享
+                    <a href="" class="close" title="Close">&times;</a>
+                </header>
+
+                <div class="roon-share-links">
+                {{! 以下代码使用的是百度分享(http://share.baidu.com/)，如需自定义，请自行到百度分享上定制并将代码粘贴到这里。}}
+                <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+                {{! 百度分享代码结束}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{{/post}}
+
+{{!-- TODO: Add next/prev posts --}}

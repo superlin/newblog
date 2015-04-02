@@ -8,6 +8,12 @@
 
     <!-- start post -->
     <article id="{{id}}" class="post tag-feature tag-getting-started {{#if featured}}featured{{/if}}">
+        {{!-- 星标 --}}
+        {{#if featured}}
+        <div class="featured">
+            <i class="fa fa-star"></i>
+        </div>
+        {{/if}}
         {{!-- 标题 --}}
         <div class="post-head">
             <h2 class="post-title">{{{title}}}</h2>
@@ -27,6 +33,19 @@
         <div class="post-content">
             {{content}}
         </div>
+        {{!-- 前一篇和后一篇 --}}
+        <nav class="row">
+            {{#if previous}}
+            <div class="col-md-6">
+                <a href="{{previous.url}}" title="Previous Post"><i class="fa fa-chevron-left"></i> {{previous.title}}</a>
+            </div>
+            {{/if}}
+            {{#if next}}
+            <div class="col-md-6" style="text-align:right; float: right">
+                <a href="{{next.url}}" title="Previous Post">{{next.title}} <i class="fa fa-chevron-right"></i></a>
+            </div>
+            {{/if}}
+        </nav>
         {{!-- 标签和分享 --}}
         <footer class="post-footer clearfix">
              <div class="pull-left tag-list">

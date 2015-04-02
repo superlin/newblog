@@ -70,7 +70,8 @@
                     <!-- start tag cloud widget -->
                     <div class="widget">
                         <h4 class="title">Tags</h4>
-                        <div class="content tag-cloud"></div>
+                        {{!-- <div class="content tag-cloud"></div> --}}
+                        {{tag_cloud limit=15}}
                     </div>
                     <!-- end tag cloud widget -->
                     <!-- start widget -->
@@ -107,7 +108,7 @@
                     <!-- start tag cloud widget -->
                     <div class="widget">
                         <h4 class="title">Tags</h4>
-                        <div class="content tag-cloud"></div>
+                        {{tag_cloud limit=15}}
                     </div>
                     <!-- end tag cloud widget -->
                 </div>
@@ -153,8 +154,8 @@
 
     {{! The main JavaScript file for Casper }}
     <!-- scripts -->
-    <script type="text/javascript" src="{{asset "js/jquery.fitvids.js"}}"></script>
-    <script type="text/javascript" src="{{asset "js/index.js"}}"></script>
+    <script src="{{asset "js/jquery.fitvids.js"}}"></script>
+    <script src="{{asset "js/index.js"}}"></script>
     <script src="/public/jquery.min.js"></script>
     {{!-- 原来的在此处统计评论数 --}}
     <!-- <script src="/assets/js/jquery.fitvids.js?v=557d4971a9"></script> -->
