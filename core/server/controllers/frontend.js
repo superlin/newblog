@@ -16,6 +16,7 @@ var moment      = require('moment'),
     errors      = require('../errors'),
     cheerio     = require('cheerio'),
     routeMatch  = require('path-match')(),
+    nodemailer  = require('nodemailer'),
 
     frontendControllers,
     staticPostPermalink,
@@ -138,6 +139,63 @@ function getActiveThemePaths() {
 }
 
 frontendControllers = {
+    about: function (req, res, next) {
+        return res.render('about');
+    },
+    contact: function (req, res, next) {
+        return res.render('contact');
+    },
+    archives: function (req, res, next) {
+        return res.render('archives');
+    },
+    message: function(req, res, next){
+        var data = req.body;
+        var errors = [];
+        if(data.name === ""){
+            errors.push("error-name");
+        }
+        if(data.message === ""){
+            errors.push("error-message");
+        }
+        var expr = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+        if(expr.test(data.email) == false){
+            errors.push("error-email");
+        }
+        if(errors.length != 0){
+            return res.send(errors.join(","));
+        }
+        var html = "<p>Name:"+data.name+"</p><p>Email:"+data.email+"</p><p>Meaasge:"+data.message+"</p>";
+        var config = {
+          mail:{
+            from:{
+              name: '流星博客',
+              host: 'smtp.163.com',
+              auth: {
+                user: 'wlliu_hg@163.com',
+                pass: 'liuwanlin'
+              }
+            },
+            to: [
+              data.name + ' <1092793900@qq.com>'
+            ]
+          }
+        };
+        var smtpTransport = nodemailer.createTransport('SMTP', config.mail.from);
+        var mailOptions = {
+            from: [config.mail.from.name, config.mail.from.auth.user].join(' '),
+            to: config.mail.to.join(','),
+            subject: "博客中有人联系你",
+            html: html
+        };
+        smtpTransport.sendMail(mailOptions, function(error, response){
+            if (error) {
+                res.send("error");
+            } else {
+                res.send("success");
+            }
+            smtpTransport.close();
+        });
+    },
     homepage: function (req, res, next) {
         // Parse the page number
         var pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,

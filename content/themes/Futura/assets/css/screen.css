@@ -669,9 +669,6 @@ pre {
 	media query
 ====================================================*/
 @media (max-width: 767px) {
-  .main-navigation {
-    text-align: left;
-  }
   .main-navigation .menu li {
     display: block;
   }

@@ -6,94 +6,107 @@
 {{! Everything inside the #post tags pulls data from the post }}
 {{#post}}
 
-<header class="main-header post-head {{#if image}}" style="background-image: url({{image}}){{else}}no-cover{{/if}}">
-    <nav class="main-nav {{#if image}}overlay{{/if}} clearfix">
-        {{#if @blog.logo}}<a class="blog-logo" href="{{@blog.url}}"><img src="{{@blog.logo}}" alt="Blog Logo" /></a>{{/if}}
-        {{#if @blog.navigation}}
-            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    <!-- start post -->
+    <article id="{{id}}" class="post tag-feature tag-getting-started {{#if featured}}featured{{/if}}">
+        {{!-- 标题 --}}
+        <div class="post-head">
+            <h2 class="post-title">{{{title}}}</h2>
+            <div class="post-meta">
+                <span class="author">By {{author}}</span> •
+                <span class="date">{{date format="MMMM DD, YYYY"}}</span> •
+                <span class="comment-count"><a href="{{url}}#ds-thread"><a href="{{url}}#ds-thread"><span class="ds-thread-count" data-thread-key="{{id}}" data-count-type="comments">No Comments</span></a></span>
+            </div>
+        </div>
+        {{!-- 文章图片 --}}
+        {{#if image}}
+        <div class="featured-media">
+            <a href="{{url}}"><img src="{{image}}" alt="{{{title}}}"></a>
+        </div>
         {{/if}}
-    </nav>
-</header>
-
-<main class="content" role="main">
-    <article class="{{post_class}}">
-
-        <header class="post-header">
-            <h1 class="post-title">{{title}}</h1>
-            <section class="post-meta">
-                <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format="DD MMMM YYYY"}}</time> {{tags prefix=" on "}}
-            </section>
-        </header>
-
-        <section class="post-content">
+        {{!-- 内容 --}}
+        <div class="post-content">
             {{content}}
-        </section>
-
-        <footer class="post-footer">
-
-        {{! Everything inside the #author tags pulls data from the author }}
-        {{#author}}
-
-            {{#if image}}
-            <figure class="author-image">
-                <a class="img" href="{{url}}" style="background-image: url({{image}})"><span class="hidden">{{name}}'s Picture</span></a>
-            </figure>
-            {{/if}}
-
-            <section class="author">
-                <h4><a href="{{url}}">{{name}}</a></h4>
-
-                {{#if bio}}
-                    <p>{{bio}}</p>
-                {{else}}
-                    <p>Read <a href="{{url}}">more posts</a> by this author.</p>
-                {{/if}}
-                <div class="author-meta">
-                    {{#if location}}<span class="author-location icon-location">{{location}}</span>{{/if}}
-                    {{#if website}}<span class="author-link icon-link"><a href="{{website}}">{{website}}</a></span>{{/if}}
-                </div>
-            </section>
-
-        {{/author}}
-
-            <section class="share">
-                <h4>Share this post</h4>
-                <a class="icon-twitter" href="https://twitter.com/share?text={{encode title}}&amp;url={{url absolute="true"}}"
-                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-                    <span class="hidden">Twitter</span>
-                </a>
-                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u={{url absolute="true"}}"
-                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-                    <span class="hidden">Facebook</span>
-                </a>
-                <a class="icon-google-plus" href="https://plus.google.com/share?url={{url absolute="true"}}"
-                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-                    <span class="hidden">Google+</span>
-                </a>
-            </section>
-
+        </div>
+        {{!-- 标签和分享 --}}
+        <footer class="post-footer clearfix">
+             <div class="pull-left tag-list">
+                <i class="fa fa-folder-open-o"></i>
+                {{tags}}
+            </div>
+            <div class="pull-right share">
+                <ul class="share-icons">
+                    <!-- twitter -->
+                    <li>
+                        <a href="https://twitter.com/share?text=I find a good post, {{title}}&url={{@blog.url}}/{{url}}/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <!-- facebook -->
+                    <li>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{@blog.url}}/{{url}}/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <!-- google plus -->
+                    <li>
+                        <a href="https://plus.google.com/share?url={{@blog.url}}/{{url}}/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;"><i class="fa fa-google-plus"></i></a>
+                    </li>
+                    <!-- weibo -->
+                    <li>
+                        <a href="http://service.weibo.com/share/share.php?url={{@blog.url}}/{{url}}&title=我看到了一篇不错的文章-《{{title}}》" onclick="window.open(this.href, 'weibo-share', 'width=490,height=530');return false;"><i class="fa fa-weibo"></i></a>
+                    </li>
+                    <!-- weixin -->
+                    <li>
+                        <a href="http://share.v.t.qq.com/index.php?c=share&a=index&url={{@blog.url}}/{{url}}&title=我看到了一篇不错的文章-《{{title}}》" onclick="window.open(this.href, 'weibo-share', 'width=490,height=530');return false;"><i class="fa fa-tencent-weibo"></i></a>
+                    </li>
+                </ul>
+            </div>
         </footer>
-
     </article>
-</main>
 
-<aside class="read-next">
-    {{#next_post}}
-    <a class="read-next-story {{#if image}}" style="background-image: url({{image}}){{else}}no-cover{{/if}}" href="{{url}}">
-        <section class="post">
-            <h2>{{title}}</h2>
-            <p>{{excerpt words="19"}}&hellip;</p>
-        </section>
-    </a>
-    {{/next_post}}
-    {{#prev_post}}
-    <a class="read-next-story prev {{#if image}}" style="background-image: url({{image}}){{else}}no-cover{{/if}}" href="{{url}}">
-        <section class="post">
-            <h2>{{title}}</h2>
-            <p>{{excerpt words="19"}}&hellip;</p>
-        </section>
-    </a>
-    {{/prev_post}}
-</aside>
+    <!-- start about the author -->
+    {{#author}}
+    <div class="about-author clearfix">
+        <a href="/author/{{slug}}/">
+            {{#if image}}<img src="{{image}}" alt="Author image" class="avatar pull-left">
+            {{else}}<img src="/shared/img/user-image.png" alt="Author image" class="avatar pull-left">{{/if}}
+        </a>
+        <div class="details">
+            <div class="author">
+            About <a href="/author/{{slug}}/">{{name}}</a>
+            </div>
+            <div class="meta-info">
+                {{#if location}}<span class="loaction"><i class="fa fa-home"></i>{{location}}</span>{{/if}}
+                {{#if website}}<span class="website"><i class="fa fa-globe"></i><a href="{{website}}" targer="_BLANK">Website</a></span>{{/if}}
+            </div>
+            {{#if bio}}<div class="bio">{{bio}}</div>{{/if}}
+        </div>
+    </div>
+    {{/author}}
+    <!-- end about the author -->
+
+    <div class="comment-wrap">
+        <div class="comments">
+            <style>
+                #ds-smilies-tooltip, #ds-smilies-tooltip::before,#ds-smilies-tooltip::after, #ds-smilies-tooltip *, #ds-smilies-tooltip *::before,#ds-smilies-tooltip *::after{
+                    box-sizing: content-box;
+                    -webkit-box-sizing: content-box;
+                    -moz-box-sizing: content-box;
+                }
+            </style>
+            <!-- 多说评论框 start -->
+            <div id="ds-thread" class="ds-thread" data-thread-key="{{id}}" data-title="{{title}}" data-url="{{@blog.url}}/{{slug}}"></div>
+            <!-- 多说评论框 end -->
+            <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"lwlblog"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0]
+                     || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!-- 多说公共JS代码 end -->
+        </div>
+    </div>
 
 {{/post}}

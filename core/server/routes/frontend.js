@@ -53,6 +53,12 @@ frontendRoutes = function () {
     router.get('/', frontend.homepage);
     router.get('*', frontend.single);
 
+    //other
+    router.get('/about', frontend.about);
+    router.get('/contact', frontend.contact);
+    router.get('/archives', frontend.archives);
+    router.post('/message', frontend.message);
+
     return router;
 };
 

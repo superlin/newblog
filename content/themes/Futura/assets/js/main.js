@@ -8,26 +8,6 @@
  1. function declearetion
  ==========================*/
 var themeApp = {
-	featuredMedia: function(){
-		$(".post").each(function() {
-			var thiseliment = $(this);
-			var media_wrapper = $(this).find('featured');
-			var media_content_image = media_wrapper.find($('img'));
-			var media_content_embeded = media_wrapper.find('iframe');
-			if (media_content_image.length > 0) {
-				$(media_content_image).insertAfter(thiseliment.find('.post-head')).wrap("<div class='featured-media'></div>");
-				thiseliment.addClass('post-type-image');
-				media_wrapper.remove();
-			}
-			else if (media_content_embeded.length > 0) {
-				$(media_content_embeded).insertAfter(thiseliment.find('.post-head')).wrap("<div class='featured-media'></div>");
-				thiseliment.addClass('post-type-embeded');
-			}
-		});
-	},
-	responsiveIframe: function() {
-		$('.post').fitVids();
-	},
 	sidebarConfig:function() {
 		if(sidebar_left == true) {
 			$('.main-content').addClass('col-md-push-4');
@@ -37,18 +17,22 @@ var themeApp = {
 	tagcloud:function(){
 		var FEED_URL = "/rss/";
 		var primary_array = [];
+		var tag_num = {};
 		$.get(FEED_URL, function (data) {
 			$(data).find("category").each(function () {
 				var el = $(this).text();
 				if ($.inArray(el, primary_array) == -1) {
 					primary_array.push(el);
+					tag_num[el] = 1;
+				} else {
+					tag_num[el] +=1;
 				}
 			});
 			var formated_tag_list = "";
 			for ( var i = 0; i < primary_array.length; i = i + 1 ) {
 				var tag = primary_array[ i ];
 				var tagLink = tag.toLowerCase().replace(/ /g, '-');
-				formated_tag_list += ("<a href=\"/tag/" + tagLink + "\">" + tag + "</a>");
+				formated_tag_list += ("<a href=\"/tag/" + tagLink + "\">" + tag +" ("+tag_num[tag]+") " + "</a>");
 			}
 			$('.tag-cloud').append(formated_tag_list);
 		});
@@ -67,7 +51,7 @@ var themeApp = {
 					var d = new Date(dt);
 					var month_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 					var month = month_name[d.getMonth()];
-					var date = d.getDate();
+					var date = d.getDate() > 9 ? d.getDate() : '0'+d.getDate();
 					var year = d.getFullYear();
 					var formatted_dt = month+' '+date+','+' '+year;
 					return formatted_dt;
@@ -77,99 +61,6 @@ var themeApp = {
 				code += '</div>';
 			})
 			$(".recent-post").html(code);
-		});
-	},
-	facebook:function() {
-
-		// var fb_page = '<iframe src="//www.facebook.com/plugins/likebox.php?href='+facebook_page_url+'&amp;width=262&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=false&amp;height=300&amp;show-border=false" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100%; height:300px;" allowTransparency="true"></iframe>';
-		var fb_page = '<iframe src="//www.facebook.com/plugins/likebox.php?href='+facebook_page_url+'&amp;width&amp;height=258&amp;colorscheme=light&amp;show_faces=true&amp;header=false&amp;stream=false&amp;show_border=false" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:258px; width:100%;" allowTransparency="true"></iframe>';
-		$('.fb').append(fb_page);
-		$(".fb").fitVids();
-	},
-	twitter: function() {
-		var twitter_block = '<a class="twitter-timeline" href="'+twitter_url+'" data-widget-id="'+twitter_widget_id+'" data-link-color="#0062CC" data-chrome="nofooter noscrollbar" data-tweet-limit="'+number_of_tweet+'">Tweets</a>';
-		twitter_block += "<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\"://platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>";
-		$('.twitter').append(twitter_block);
-	},
-	googlePlus:function() {
-		if(badge_type !== "" && google_plus_url !== "") {
-			$('body').append('<script src="https://apis.google.com/js/platform.js" async defer></script>');
-			var container = $('.google-plus');
-			var width = container.width();
-			var google_plus_code = '<div class="g-'+badge_type+'" data-width="'+width+'" data-href="'+google_plus_url+'" data-rel="publisher"></div>';
-			container.append(google_plus_code);
-		}
-	},
-	mailchimp:function() {
-		var form = $('#mc-embedded-subscribe-form');
-		form.attr("action", mailchimp_form_url);
-		var message = $('#message');
-		var submit_button = $('mc-embedded-subscribe');
-		function IsEmail(email) {
-			var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-			return regex.test(email);
-		}
-		form.submit(function(e){
-			e.preventDefault();
-			$('#mc-embedded-subscribe').attr('disabled','disabled');
-			if($('#mce-EMAIL').val() != '' && IsEmail($('#mce-EMAIL').val())) {
-				message.html('please wait...').fadeIn(1000);
-				var url=form.attr('action');
-				if(url=='' || url=='YOUR_MAILCHIMP_WEB_FORM_URL_HERE') {
-					alert('Please config your mailchimp form url for this widget');
-					return false;
-				}
-				else{
-					url=url.replace('?u=', '/post-json?u=').concat('&c=?');
-					console.log(url);
-					var data = {};
-					var dataArray = form.serializeArray();
-					$.each(dataArray, function (index, item) {
-					data[item.name] = item.value;
-					});
-					$.ajax({
-						url: url,
-						type: "POST",
-						data: data,
-						success: function(response, text){
-							if (response.result === 'success') {
-								message.html(success_message).delay(10000).fadeOut(500);
-								$('#mc-embedded-subscribe').removeAttr('disabled');
-								$('#mce-EMAIL').val('');
-							}
-							else{
-								message.html(response.result).delay(10000).fadeOut(500);
-								$('#mc-embedded-subscribe').removeAttr('disabled');
-								$('#mce-EMAIL').focus().select();
-							}
-						},
-						dataType: 'jsonp',
-						error: function (response, text) {
-							console.log('mailchimp ajax submit error: ' + text);
-							$('#mc-embedded-subscribe').removeAttr('disabled');
-							$('#mce-EMAIL').focus().select();
-						}
-					});
-					return false;
-				}
-			}
-			else {
-				message.html('Please provide valid email').fadeIn(1000);
-				$('#mc-embedded-subscribe').removeAttr('disabled');
-				$('#mce-EMAIL').focus().select();
-			}
-		});
-	},
-	flickr:function() {
-		$('.flkr-widget').jflickrfeed({
-			limit: 8,
-			qstrings: {
-				id: flickr_id
-			},
-			itemTemplate:
-			'<li>' +
-				'<a href="{{link}}" title="{{title}}" target="_blank"><img src="{{image_s}}" alt="{{title}}" /></a>' +
-			'</li>'
 		});
 	},
 	highlighter: function() {
@@ -192,17 +83,10 @@ var themeApp = {
 		});
 	},
 	init: function() {
-		themeApp.featuredMedia();
-		themeApp.responsiveIframe();
 		themeApp.sidebarConfig();
 		themeApp.tagcloud();
 		themeApp.recentPost();
-		themeApp.facebook();
-		themeApp.twitter();
-		themeApp.googlePlus();
-		themeApp.flickr();
 		themeApp.highlighter();
-		themeApp.mailchimp();
 		themeApp.backToTop();
 	}
 }
@@ -212,4 +96,99 @@ var themeApp = {
 ==========================*/
 $(document).ready(function(){
   themeApp.init();
+
+  /* ---------------------------------------------------------------------- */
+  /* -------------------------- Contact Form ------------------------------ */
+  /* ---------------------------------------------------------------------- */
+
+  function checkmessage(msg){
+      var msg_error = msg.split(",");
+      var output_error = 'Fail to send a message';
+      var $success = ' Your message has been sent. Thank you!';
+			var response = '';
+
+      if (msg_error.indexOf('error-message') != -1) {
+          $("#contact-message").addClass("has-error");
+          $("#contact-message").removeClass("has-success");
+          output_error = 'Please enter your message.';
+      } else {
+          $("#contact-message").addClass("has-success");
+          $("#contact-message").removeClass("has-error");
+      }
+
+      if (msg_error.indexOf('error-email') != -1) {
+
+          $("#contact-email").addClass("has-error");
+          $("#contact-email").removeClass("has-success");
+          output_error = 'Please enter valid e-mail.';
+      } else {
+          $("#contact-email").addClass("has-success");
+          $("#contact-email").removeClass("has-error");
+      }
+
+      if (msg_error.indexOf('error-name') != -1) {
+          $("#contact-name").addClass("has-error");
+          $("#contact-name").removeClass("has-success");
+          output_error = 'Please enter your name.';
+      } else {
+          $("#contact-name").addClass("has-success");
+          $("#contact-name").removeClass("has-error");
+      }
+
+      if (msg == 'success') {
+
+          response = '<div class="alert alert-success success-send">' +
+                  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + $success + '</div>';
+
+          $(".reset").trigger('click');
+          $("#contact-name").removeClass("has-success");
+          $("#contact-email").removeClass("has-success");
+          $("#contact-message").removeClass("has-success");
+
+      } else {
+
+          response = '<div class="alert alert-danger error-send">' +
+                  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + output_error + '</div>';
+
+      }
+      // Hide any previous response text
+      $(".error-send,.success-send").remove();
+      // Show response message
+      $contactform.prepend(response);
+  }
+
+  // Needed variables
+  var $contactform = $('#contactform');
+
+  $('#contactform').submit(function() {
+      var name = $("#contact-name").find("input").val();
+      var email = $("#contact-email").find("input").val();
+      var message = $("#contact-message").find("textarea").val();
+      var errors = [];
+      if(name === ""){
+          errors.push("error-name");
+      }
+      if(message === ""){
+          errors.push("error-message");
+      }
+      var expr = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if(expr.test(email) == false){
+          errors.push("error-email");
+      }
+      if(errors.length != 0){
+          checkmessage(errors.join(","));
+          return false;
+      }
+      $("#contact button").attr('disabled', true);
+      $.ajax({
+          type: "POST",
+          url: "/message",
+          data: $(this).serialize(),
+          success: checkmessage,
+          complete: function () {
+          	$("#contact button").attr('disabled', false);
+          }
+      });
+      return false;
+  });
 });

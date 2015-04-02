@@ -77,6 +77,5 @@ $(document).ready(function(){
 		$(this).addClass('active');
 		$('#left_sb').removeClass('active');
 		$.cookie('sp', 'right', { expires: 3, path: '/' });
-		
 	});
 });

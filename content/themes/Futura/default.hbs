@@ -4,37 +4,34 @@
     {{! Document Settings }}
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
     {{! Page Meta }}
     <title>{{meta_title}}</title>
     <meta name="description" content="{{meta_description}}" />
     <meta name="keywords" content="">
     <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content="Ghost 0.5" />
-    <!-- fav icons -->
-    <link rel="shortcut icon" href="{{asset 'favicon.ico'}}">
-    <link rel="stylesheet" type="text/css" href="{{asset 'css/bootstrap.min.css'}}">
-    <link rel="stylesheet" type="text/css" href="{{asset 'css/font-awesome.min.css'}}">
-    <link rel="stylesheet" type="text/css" href="{{asset 'css/screen.css'}}">
-    <link rel="stylesheet" type="text/css" href="{{asset 'css/hl-styles/monokai_sublime.css'}}">
-   {{!--  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png?v=557d4971a9">
-    <link rel="apple-touch-icon" sizes="72x72" href="/assets/images/apple-touch-icon-72x72.png?v=557d4971a9">
-    <link rel="apple-touch-icon" sizes="114x114" href="/assets/images/apple-touch-icon-114x114.png?v=557d4971a9">
- --}}
+    <meta name="generator" content="Ghost 0.5.10" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+
+    <link rel="shortcut icon" href="{{asset "images/favicon.ico"}}">
+    <link rel="apple-touch-icon" href="{{asset "images/apple-touch-icon.png"}}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{asset "images/apple-touch-icon-72x72.png"}}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{asset "images/apple-touch-icon-114x114.png"}}">
+
     {{! Styles'n'Scripts }}
-    <!-- <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" /> -->
-
-    <!-- stylesheets -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400%7CRoboto+Slab' rel='stylesheet' type='text/css'>
-
+    <link rel='stylesheet' href="{{asset "css/googlefonts.css"}}">
+    <link rel="stylesheet" href="{{asset "css/bootstrap.min.css"}}">
+    <link rel="stylesheet" href="{{asset "css/font-awesome.min.css"}}">
+    <link rel="stylesheet" href="{{asset "css/screen.css"}}">
+    <link rel="stylesheet" href="{{asset "css/hl-styles/monokai_sublime.css"}}">
     <!-- only for demo -->
-    <link rel="stylesheet" type="text/css" href="{{asset 'demo-assets/css/colpick.css'}}">
+    <link rel="stylesheet" href="{{asset "demo-assets/css/colpick.css"}}">
     <script>
     /*====================================================
       THEME SETTINGS & GLOBAL VARIABLES
     ====================================================*/
     //  1. Disqus comment settings
-    var disqus_shortname = 'futurathemedemo'; // required: replace example with your forum shortname
+    //var disqus_shortname = 'futurathemedemo'; // required: replace example with your forum shortname
 
     //  2. Sidebar Position
     var sidebar_left = false; // Set true or flase for positioning sidebar on left
@@ -42,29 +39,10 @@
     //  3. Recent Post count
     var recent_post_count = 3;
 
-    //  4. Google+ badge settings
-    //var badge_type = 'page'; // person / page / community ----- three type of google badge
-    //var google_plus_url = 'https://plus.google.com/111813546240107028721';
-
-    //  5. Facebook Page Setting
-    //var facebook_page_url = 'https://www.facebook.com/gbjsolution';
-
-    //  6. Twitter Setting
-    //var twitter_url = 'https://twitter.com/gbjsolution';
-    //var twitter_widget_id = '428617072633843712';
-    //var number_of_tweet = 3;
-
-    //  7. Mailchimp signup form Setting
-    var mailchimp_form_url = 'http://gbjsolution.us4.list-manage.com/subscribe?u=a63b2fed3ed61b70bf56d1aed&id=1e3806b1d4';
-    var success_message = "Please check your inbox and confirm your email address. Thanks!";
-
-    //  8. Flickr Setting
-    //var flickr_id = '52617155@N08';
     </script>
-    <link rel="canonical" href="http://futura-ghost.gbjsolution.com/" />
-    <link rel="next" href="http://futura-ghost.gbjsolution.com/page/2/" />
-    <link rel="alternate" type="application/rss+xml" title="Futura" href="http://futura-ghost.gbjsolution.com/rss/" />
-
+    <link rel="canonical" href="{{@blog.url}}" />
+    <link rel="next" href="{{@blog.url}}/page/2/" />
+    <link rel="alternate" type="application/rss+xml" title="{{@blog.title}}" href="{{@blog.url}}/rss/" />
     {{! Ghost outputs important style and meta data with this tag }}
     {{ghost_head}}
 </head>
@@ -72,29 +50,127 @@
 
     {{navigation}}
 
-    <div class="site-wrapper">
+    <!-- start site's main content area -->
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <!-- start main post area -->
+                <div class="col-md-8 main-content">
+                    {{! Everything else gets inserted here }}
+                    {{{body}}}
+                </div>
+                <!-- start sidebar -->
+                <div class="col-md-4 sidebar">
+                    <!-- start widget -->
+                    <div class="widget">
+                        <h4 class="title">Recent Post</h4>
+                        <div class="content recent-post"></div>
+                    </div>
+                    <!-- end widget -->
+                    <!-- start tag cloud widget -->
+                    <div class="widget">
+                        <h4 class="title">Tags</h4>
+                        <div class="content tag-cloud"></div>
+                    </div>
+                    <!-- end tag cloud widget -->
+                    <!-- start widget -->
+                    <div class="widget">
+                        <h4 class="title">Announcement</h4>
+                        <div class="content">
+                            Dear visitors, if you have any questions to discuss with me, just click the <a href="/contact">contact page</a> and send an email to me. I am very glad to hear from you.
+                        </div>
+                    </div>
+                    <!-- end widget -->
+                </div>
+                <!-- end sidebar -->
+            </div>
+        </div>
 
-        {{! Everything else gets inserted here }}
-        {{{body}}}
+    </section>
 
-        <footer class="site-footer clearfix">
-            <section class="copyright"><a href="{{@blog.url}}">{{@blog.title}}</a> &copy; {{date format="YYYY"}}</section>
-            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
-        </footer>
+    <!-- start main-footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <!-- start first footer widget area -->
+                <div class="col-sm-4">
+                    <!-- start widget -->
+                    <div class="widget">
+                        <h4 class="title">Recent Post</h4>
+                        <div class="content recent-post"></div>
+                    </div>
+                    <!-- end widget -->
+                </div>
+                <!-- end first footer widget area -->
+                <!-- start second footer widget area -->
+                <div class="col-sm-4">
+                    <!-- start tag cloud widget -->
+                    <div class="widget">
+                        <h4 class="title">Tags</h4>
+                        <div class="content tag-cloud"></div>
+                    </div>
+                    <!-- end tag cloud widget -->
+                </div>
+                <!-- end second footer widget area -->
+                <!-- start third footer widget area -->
+                <div class="col-sm-4">
+                    <!-- start widget -->
+                    <div class="widget">
+                        <h4 class="title">Links</h4>
+                        <div class="content links"></div>
+                    </div>
+                    <!-- end widget -->
+                </div>
+                <!-- end third footer widget area -->
+            </div>
+        </div>
+    </footer>
+    <!-- end main-footer -->
+    <!-- start copyright section -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    Copyright &copy; 2015, <a href="{{@blog.url}}">{{@blog.title}}</a>.  All Right Reserved
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end copyright section -->
 
+    <!--back to top-->
+    <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+    <div id="setting_panel">
+        <a href="" id="setting_panel_toggle"><i class="fa fa-tint"></i></a>
+        <div id="picker_holder"></div>
+        <a class="dp-button dfc-bt" id="default_color">Default Color</a>
+        <a class="dp-button sb-bt" id="left_sb">Sidebar Left</a>
+        <a class="dp-button sb-bt active" id="right_sb">Sidebar Right</a>
     </div>
 
     {{! Ghost outputs important scripts and data with this tag }}
     {{ghost_foot}}
 
     {{! The main JavaScript file for Casper }}
+    <!-- scripts -->
     <script type="text/javascript" src="{{asset "js/jquery.fitvids.js"}}"></script>
-    <!-- <script type="text/javascript" src="{{asset "js/index.js"}}"></script> -->
-
+    <script type="text/javascript" src="{{asset "js/index.js"}}"></script>
     <script src="/public/jquery.min.js"></script>
+    {{!-- 原来的在此处统计评论数 --}}
+    <!-- <script src="/assets/js/jquery.fitvids.js?v=557d4971a9"></script> -->
     <script src="{{asset "js/bootstrap.min.js"}}"></script>
     <script src="{{asset "js/highlight.pack.js"}}"></script>
     <script src="{{asset "js/main.js"}}"></script>
+    <!-- Add your analytic code below -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-54889743-1', 'auto');
+      ga('send', 'pageview');
+    </script>
     <!-- only for demo -->
     <script src="{{asset "demo-assets/js/colpick.js"}}"></script>
     <script src="{{asset "demo-assets/js/jquery.cookie.js"}}"></script>
