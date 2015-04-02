@@ -34,6 +34,24 @@ function prepareInclude(include) {
 posts = {
 
     /**
+     * ### getAll
+     * 获取所有文章，归档
+     *
+     * 返回发布的文章的标题，时间，标签
+     *
+     * @public
+     * @returns {Promise(Posts)} Posts Collection with Meta
+     */
+    getAll: function getAll() {
+        var options = {
+            limit: 'all'
+        }
+
+        return dataProvider.Post.findPage(options);
+    },
+
+
+    /**
      * ### Browse
      * Find a paginated set of posts
      *

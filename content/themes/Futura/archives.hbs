@@ -1,5 +1,18 @@
 {{!< default}}
 
-<div class="post">
-	haha
-</div>
+{{#foreach posts}}
+
+	<article class="post archive">
+		{{!-- 星标 --}}
+    {{#if featured}}
+    <div class="featured">
+        <i class="fa fa-star"></i>
+    </div>
+    {{/if}}
+		<header>
+		  <span class="date">{{date format="MMMM DD, YYYY"}}</span>
+		  <h3><a href="{{url}}" title="{{{title}}}">{{{title}}}</a></h3>
+	  </header>
+	</article>
+
+{{/foreach}}

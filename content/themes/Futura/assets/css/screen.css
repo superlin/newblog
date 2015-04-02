@@ -490,6 +490,10 @@ pre {
   background: #00ada7;
   border: 1px solid #00ada7;
 }
+.widget .tag-cloud hr {
+  border: 0;
+  border-bottom: 1px dashed #303030;
+}
 .widget .tag-cloud a {
   border: 1px solid #ebebeb;
   padding: 2px 7px;
@@ -670,6 +674,32 @@ pre {
   width: 30px;
   height: 30px;
   line-height: 30px;
+}
+
+/*====================================================
+  archives
+====================================================*/
+.archive{
+  padding: 20px 30px;
+  margin-bottom: 15px;
+  background-color: #fff;
+  border: 2px solid #fff;
+  transition: all 1s;
+  -wekit-transition: all 1s;
+  -o-transition: all 1s;
+  -moz-transition: all 1s;
+}
+.archive:hover{
+  border-color: #3e9c98;
+}
+.archive h3{
+  margin-top: 10px;
+}
+.archive .date{
+  color: #959595;
+}
+.archive a{
+  text-decoration: none;
 }
 /*====================================================
 	media query

@@ -146,7 +146,14 @@ frontendControllers = {
         return res.render('contact');
     },
     archives: function (req, res, next) {
-        return res.render('archives');
+        return api.posts.getAll().then(function (page) {
+            setReqCtx(req, page.posts);
+            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+
+                setResponseContext(req, res);
+                res.render('archives', {posts : posts});
+            });
+        }).catch(handleError(next));
     },
     message: function(req, res, next){
         var data = req.body;
@@ -215,7 +222,6 @@ frontendControllers = {
             }
 
             setReqCtx(req, page.posts);
-
             // Render the page of posts
             filters.doFilter('prePostsRender', page.posts).then(function (posts) {
                 getActiveThemePaths().then(function (paths) {
