@@ -1,31 +1,78 @@
 {{!< default}}
 
-{{! This is a page template. A page outputs content just like any other post, and has all the same
-    attributes by default, but you can also customise it to behave differently if you prefer. }}
+{{! The comment above "< default" means - insert everything in this file into
+    the {body} of the default.hbs template, which contains our header/footer. }}
 
-{{! Everything inside the #post tags pulls data from the page }}
+{{! Everything inside the #post tags pulls data from the post }}
 {{#post}}
 
-<header class="main-header post-head {{#if image}}" style="background-image: url({{image}}){{else}}no-cover{{/if}}">
-    <nav class="main-nav {{#if image}}overlay{{/if}} clearfix">
-        {{#if @blog.logo}}<a class="blog-logo" href="{{@blog.url}}"><img src="{{@blog.logo}}" alt="Blog Logo" /></a>{{/if}}
-        {{#if @blog.navigation}}
-            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    <!-- start post -->
+    <article id="{{id}}" class="post tag-feature tag-getting-started {{#if featured}}featured{{/if}}">
+        {{!-- 星标 --}}
+        {{#if featured}}
+        <div class="featured">
+            <i class="fa fa-star"></i>
+        </div>
         {{/if}}
-    </nav>
-</header>
-
-<main class="content" role="main">
-    <article class="{{post_class}}">
-
-        <header class="post-header">
-            <h1 class="post-title">{{title}}</h1>
-        </header>
-
-        <section class="post-content">
+        {{!-- 标题 --}}
+        <div class="post-head">
+            <h2 class="post-title">{{{title}}}</h2>
+            <div class="post-meta">
+                <span class="author">By {{author}}</span> •
+                <span class="date">{{date format="MMMM DD, YYYY"}}</span>
+            </div>
+        </div>
+        {{!-- 文章图片 --}}
+        {{#if image}}
+        <div class="featured-media">
+            <a href="{{url}}"><img src="{{image}}" alt="{{{title}}}"></a>
+        </div>
+        {{/if}}
+        {{!-- 内容 --}}
+        <div class="post-content">
             {{content}}
-        </section>
-
+        </div>
+        {{!-- 前一篇和后一篇 --}}
+        <nav class="row">
+            {{#if previous}}
+            <div class="col-md-6">
+                <a href="{{previous.url}}" title="Previous Post"><i class="fa fa-chevron-left"></i> {{previous.title}}</a>
+            </div>
+            {{/if}}
+            {{#if next}}
+            <div class="col-md-6" style="text-align:right; float: right">
+                <a href="{{next.url}}" title="Previous Post">{{next.title}} <i class="fa fa-chevron-right"></i></a>
+            </div>
+            {{/if}}
+        </nav>
+        {{!-- 标签 --}}
+        <footer class="post-footer clearfix">
+             <div class="pull-left tag-list">
+                <i class="fa fa-folder-open-o"></i>
+                {{tags}}
+            </div>
+        </footer>
     </article>
-</main>
+
+    <!-- start about the author -->
+    {{#author}}
+    <div class="about-author clearfix">
+        <a href="/author/{{slug}}/">
+            {{#if image}}<img src="{{image}}" alt="Author image" class="avatar pull-left">
+            {{else}}<img src="/shared/img/user-image.png" alt="Author image" class="avatar pull-left">{{/if}}
+        </a>
+        <div class="details">
+            <div class="author">
+            About <a href="/author/{{slug}}/">{{name}}</a>
+            </div>
+            <div class="meta-info">
+                {{#if location}}<span class="loaction"><i class="fa fa-home"></i>{{location}}</span>{{/if}}
+                {{#if website}}<span class="website"><i class="fa fa-globe"></i><a href="{{website}}" targer="_BLANK">Website</a></span>{{/if}}
+            </div>
+            {{#if bio}}<div class="bio">{{bio}}</div>{{/if}}
+        </div>
+    </div>
+    {{/author}}
+    <!-- end about the author -->
+
 {{/post}}
