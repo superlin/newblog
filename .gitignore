@@ -45,7 +45,7 @@ Session.vim
 /core/server/data/export/exported*
 /core/client/docs/_site
 /content/tmp/*
-/content/images/*
+/content/images/2015/*
 /content/data/*
 !/README.md
 

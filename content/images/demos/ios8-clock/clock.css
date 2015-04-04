@@ -1,0 +1,141 @@
+body{
+    text-align: center;
+}
+
+.clocks {
+    background: rgba(0,0,0,0.9);
+    padding: 1em;
+    display: inline-block;
+    border-radius: 20%;
+}
+
+@media (max-width: 550px) {
+    .clocks {
+        font-size:12px;
+    }
+    .clock {
+        font-size:12px
+    }
+}
+
+@media (max-width: 420px) {
+    .clock {
+        font-size:10px
+    }
+}
+
+.clock {
+    border-radius: 50%;
+    position: relative;
+    height: 20em;
+    width: 20em;
+    -webkit-transition: all 2.5s cubic-bezier(.12,1.03,.34,1);
+    transition: all 2.5s cubic-bezier(.12,1.03,.34,1);
+    background: #fff url(ios_clock.svg) no-repeat center;
+    background-size: 88%;
+}
+
+.clock::after {
+    background: red;
+    border-radius: 50%;
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    width: 2%;
+    height: 2%;
+    z-index: 10
+}
+
+.clock:before {
+    background: black;
+    border-radius: 50%;
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    width: 6%;
+    height: 6%;
+    z-index: 0
+}
+
+.minutes-container,.hours-container,.seconds-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0
+}
+
+.hours-container {
+    -webkit-animation: rotate 43200s infinite linear;
+    animation: rotate 43200s infinite linear
+}
+
+.minutes-container {
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(.4,2.08,.55,.44);
+    transition: transform 0.3s cubic-bezier(.4,2.08,.55,.44)
+}
+
+.seconds-container {
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(.4,2.08,.55,.44);
+    transition: transform 0.2s cubic-bezier(.4,2.08,.55,.44)
+}
+
+@-webkit-keyframes rotate {
+    100% {
+        -webkit-transform: rotateZ(360deg);
+        transform: rotateZ(360deg)
+    }
+}
+
+@keyframes rotate {
+    100% {
+        -webkit-transform: rotateZ(360deg);
+        transform: rotateZ(360deg)
+    }
+}
+
+.hours, .minutes, .seconds{
+    position: absolute;
+    -webkit-transform-origin: 50% 100%;
+    -ms-transform-origin: 50% 100%;
+    transform-origin: 50% 100%
+}
+
+.hours {
+    background: #000;
+    border-radius: 85%/10%;
+    width: 2%;
+    height: 25%;
+    left: 49%;
+    top: 25%;
+}
+
+.minutes {
+    background: #000;
+    border-radius: 150%/10%;
+    width: 2%;
+    height: 40%;
+    left: 49%;
+    top: 10%;
+}
+
+.seconds {
+    background: red;
+    border-radius: 200%/10%;
+    width: 1%;
+    height: 50%;
+    left: 49.5%;
+    top: 5%;
+    z-index: 8;
+    -webkit-transform-origin: 50% 90%;
+    -ms-transform-origin: 50% 90%;
+    transform-origin: 50% 90%
+}
