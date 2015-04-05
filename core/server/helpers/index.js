@@ -39,6 +39,7 @@ coreHelpers.url = require('./url');
 coreHelpers.image = require('./image');
 coreHelpers.tag_cloud = require('./tag_cloud');
 coreHelpers.meta_keywords = require('./meta_keywords');
+coreHelpers.recent_posts = require('./recent_posts');
 
 coreHelpers.ghost_script_tags = require('./ghost_script_tags');
 
@@ -111,6 +112,7 @@ registerHelpers = function (adminHbs) {
 
     registerAsyncThemeHelper('tag_cloud', coreHelpers.tag_cloud);
     registerAsyncThemeHelper('meta_keywords', coreHelpers.meta_keywords);
+    registerAsyncThemeHelper('recent_posts', coreHelpers.recent_posts);
 
     // Register admin helpers
     registerAdminHelper('ghost_script_tags', coreHelpers.ghost_script_tags);

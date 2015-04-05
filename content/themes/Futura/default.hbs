@@ -22,7 +22,6 @@
     <link rel="apple-touch-icon" sizes="114x114" href="{{asset "images/apple-touch-icon-114x114.png"}}">
 
     {{! Styles'n'Scripts }}
-    <link rel="stylesheet" href="{{asset "css/hl-styles/monokai_sublime.css"}}">
     <link rel="stylesheet" href="{{asset "css/bootstrap.min.css"}}">
     <link rel="stylesheet" href="{{asset "css/font-awesome.min.css"}}">
 
@@ -35,7 +34,7 @@
     var sidebar_left = false; // Set true or flase for positioning sidebar on left
 
     //  Recent Post count
-    var recent_post_count = 3;
+    // var recent_post_count = 3;
 
     </script>
     {{! Ghost outputs important style and meta data with this tag }}
@@ -59,7 +58,7 @@
                     <!-- start widget -->
                     <div class="widget">
                         <h4 class="title">Recent Post</h4>
-                        <div class="content recent-post"></div>
+                        {{recent_posts}}
                     </div>
                     <!-- end widget -->
                     <!-- start tag cloud widget -->

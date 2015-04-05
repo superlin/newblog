@@ -14,7 +14,7 @@ var themeApp = {
 			$('.sidebar').addClass('col-md-pull-8');
 		}
 	},
-	recentPost:function() {
+	/*recentPost:function() {
 		var feed_url = "/rss/";
 		var code = String('');
 		$.get(feed_url, function(data) {
@@ -39,7 +39,7 @@ var themeApp = {
 			})
 			$(".recent-post").html(code);
 		});
-	},
+	},*/
 	highlighter: function() {
 		$('pre code').each(function(i, block) {
 		    hljs.highlightBlock(block);
@@ -61,7 +61,7 @@ var themeApp = {
 	},
 	init: function() {
 		themeApp.sidebarConfig();
-		themeApp.recentPost();
+		//themeApp.recentPost();
 		themeApp.highlighter();
 		themeApp.backToTop();
 	}
