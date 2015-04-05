@@ -14,32 +14,6 @@ var themeApp = {
 			$('.sidebar').addClass('col-md-pull-8');
 		}
 	},
-	/*recentPost:function() {
-		var feed_url = "/rss/";
-		var code = String('');
-		$.get(feed_url, function(data) {
-			$(data).find('item').slice(0,recent_post_count).each(function(){
-				var full = $(this).find('description').text();
-				var content = $(this).contentSnippet;
-				var link = $(this).find('link').text();
-				var title = $(this).find('title').text();
-				var published_date = $(this).find('pubDate').text();
-				function format_date (dt) {
-					var d = new Date(dt);
-					var month_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-					var month = month_name[d.getMonth()];
-					var date = d.getDate() > 9 ? d.getDate() : '0'+d.getDate();
-					var year = d.getFullYear();
-					var formatted_dt = month+' '+date+','+' '+year;
-					return formatted_dt;
-				}
-				code += '<div class="recent-single-post">';
-				code += '<a href="' + link + '" class="post-title">' + title + '</a><div class="date">' + format_date(published_date) + '</div>';
-				code += '</div>';
-			})
-			$(".recent-post").html(code);
-		});
-	},*/
 	highlighter: function() {
 		$('pre code').each(function(i, block) {
 		    hljs.highlightBlock(block);
@@ -61,7 +35,6 @@ var themeApp = {
 	},
 	init: function() {
 		themeApp.sidebarConfig();
-		//themeApp.recentPost();
 		themeApp.highlighter();
 		themeApp.backToTop();
 	}
