@@ -146,9 +146,12 @@ frontendControllers = {
         return res.render('contact');
     },
     archives: function (req, res, next) {
-        return api.posts.getAll().then(function (page) {
-            setReqCtx(req, page.posts);
-            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+        var options = {
+            limit:'all'
+        };
+        return api.posts.browse(options).then(function (posts) {
+            setReqCtx(req, posts.posts);
+            filters.doFilter('prePostsRender', posts.posts).then(function (posts) {
 
                 setResponseContext(req, res);
                 res.render('archives', {posts : posts});

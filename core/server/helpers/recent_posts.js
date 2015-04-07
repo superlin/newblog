@@ -6,7 +6,7 @@ var _               = require('lodash'),
     template        = require('./template'),
     config          = require('../config'),
     api             = require('../api'),
-    tag_cloud;
+    recent_posts;
 
 recent_posts = function (options) {
     var recentPostsOptions = (options || {}).hash || {}, limit;

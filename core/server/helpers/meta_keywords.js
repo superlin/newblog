@@ -1,15 +1,15 @@
 // # Meta Keywords Helper
 // Usage: `{{meta_keywords}}`
 //
-// Page description used for sharing and SEO
+// Page keywords used for sharing and SEO
 //
-// We use the name meta_description to match the helper for consistency:
+// We use the name meta_keywords to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
 var _           = require('lodash'),
     config      = require('../config'),
     filters     = require('../filters'),
-    meta_description;
+    meta_keywords;
 
 meta_keywords = function () {
     var keywords,
