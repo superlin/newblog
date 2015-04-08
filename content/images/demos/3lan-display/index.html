@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>三列布局</title>
+  <style>
+  .left, .right{
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+  }
+  .main{
+    height: 100px;
+    background-color: green;
+  }
+  /*自身浮动*/
+  .self-float .left{
+    float: left;
+  }
+  .self-float .right{
+    float: right;
+  }
+  .self-float .main{
+    margin: 0 100px;
+  }
+
+  /*绝对定位*/
+  .absolute-pos {
+    position: relative;
+  }
+  .absolute-pos .left{
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .absolute-pos .right{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .absolute-pos .main{
+    margin: 0 100px;
+  }
+  /*margin负值*/
+  .margin-negative .main{
+    width: 100%;
+    float: left;
+  }
+  .margin-negative .main .content {
+    margin: 0 100px;
+  }
+  .margin-negative .left {
+    float: left;
+    margin-left: -100%;
+  }
+  .margin-negative .right {
+    float: left;
+    margin-left: -100px;
+  }
+  /*flex布局*/
+  .flex-container{
+      display: -webkit-flex;
+      display: flex;
+  }
+  .flex-container .main{
+      -webkit-flex: 1;
+      flex: 1;
+  }
+  </style>
+</head>
+<body>
+  <p>自身浮动</p>
+  <div class="self-float">
+    <div class="left"></div>
+    <div class="right"></div>
+    <div class="main"></div>
+  </div>
+  <p>绝对定位</p>
+  <div class="absolute-pos">
+    <div class="left"></div>
+    <div class="right"></div>
+    <div class="main"></div>
+  </div>
+  <p>margin负值</p>
+  <div class="margin-negative">
+    <div class="main">
+      <div class="content"></div>
+    </div>
+    <div class="left"></div>
+    <div class="right"></div>
+    <div style="clear:both"></div>
+  </div>
+  <p>flex布局</p>
+  <div class="flex-container">
+    <div class="left"></div>
+    <div class="main"></div>
+    <div class="right"></div>
+  </div>
+</body>
+</html>

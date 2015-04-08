@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CSS3的fit-content实现水平居中</title>
+	<style>
+    *{
+      padding: 0;
+      font-size: 10px;
+    }
+		ul{
+			list-style:none;
+		}
+		.pagination ul {
+      width: -moz-fit-content;
+      width:-webkit-fit-content;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pagination li {
+      line-height: 25px;
+      margin: 0 5px;
+    float: left;
+    }
+    .pagination a {
+      display: block;
+      color: #f2f2f2;
+      text-shadow: 1px 0 0 #101011;
+      padding: 0 10px;
+      border-radius: 2px;
+      box-shadow: 0 1px 0 #5a5b5c inset,0 1px 0 #080808;
+      background: -webkit-linear-gradient(top,#434345,#2f3032);
+      background: linear-gradient(top,#434345,#2f3032);
+      text-decoration: none;
+    }
+    .pagination a:hover {
+      text-decoration: none;
+      box-shadow: 0 1px 0 #f9bd71 inset,0 1px 0 #0a0a0a;
+      background: -webkit-linear-gradient(top,#f48b03,#c87100);
+      background: linear-gradient(top,#f48b03,#c87100);
+    }
+	</style>
+</head>
+<body>
+	<div class="pagination">
+	  <ul>
+	    <li><a href="#">Prev</a></li>
+	    <li><a href="#">1</a></li>
+	    <li><a href="#">2</a></li>
+	    <li><a href="#">3</a></li>
+	    <li><a href="#">4</a></li>
+	    <li><a href="#">5</a></li>
+	    <li><a href="#">Next</a></li>
+	  </ul>
+	</div>
+</body>
+</html>
