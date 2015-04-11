@@ -1,0 +1,38 @@
+body, html {
+	height: 100%;
+	color: #6d6d6d;
+}
+a {
+	color: #17C3B9;
+}
+a:hover {
+	color: #17C3B9;
+}
+.main {
+	height: 100%;
+	background: #17C3B9;
+	padding: 100px 0;
+}
+.main a {
+	color: #fff;
+	opacity: .7;
+}
+.main a:hover {
+	color: #fff;
+	opacity: 1;
+}
+.page-text {
+	text-align: center;
+	color: #fff;
+}
+
+.page-text .rotate {
+	font-size: 9em;
+	text-transform: uppercase;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+.page-text span {
+	font-size: 22px;
+	text-transform: uppercase;
+}

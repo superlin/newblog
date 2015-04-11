@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="{{@blog.title}}">
+	<meta name="keywords" content="{{@blog.title}}">
+	<title>{{code}} - {{message}}</title>
+
+	<link rel="shortcut icon" href="{{asset "images/favicon.ico"}}">
+  <link rel="apple-touch-icon" href="{{asset "images/apple-touch-icon.png"}}">
+  <link rel="apple-touch-icon" sizes="72x72" href="{{asset "images/apple-touch-icon-72x72.png"}}">
+  <link rel="apple-touch-icon" sizes="114x114" href="{{asset "images/apple-touch-icon-114x114.png"}}">
+
+	<link rel="stylesheet" href="{{asset "css/bootstrap.min.css"}}">
+	<link rel="stylesheet" href="{{asset "css/error.css"}}">
+</head>
+<body>
+	<div class="main">
+		<div class="container page-text">
+			<div class="row">
+				<div class="col-sm-12">
+					<h1 class="rotate">OOPS!, Error {{code}}!</h1>
+					<span>{{message}}.<br>
+						Back to <a href="{{@blog.url}}">homepage</a></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{ghost_foot}}
+	<script src="{{asset "js/jquery.simple-text-rotator.min.js"}}"></script>
+	<script>
+  $(document).ready(function(){
+		$(".rotate").textrotator({
+			  animation: "dissolve", // You can pick the way it animates when rotating through words. Options are dissolve (default), fade, flip, flipUp, flipCube, flipCubeUp and spin.
+			  separator: ",", // If you don't want commas to be the separator, you can define a new separator (|, &, * etc.) by yourself using this field.
+			  speed: 4000 // How many milliseconds until the next word show.
+			});
+	});
+	</script>
+</body>
+</html>
