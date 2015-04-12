@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>target和current target</title>
+	<style>
+		body {
+  padding: 25px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#outer {
+  float: left;
+  padding: 50px;
+  margin: 0 0 25px;
+  background-color: #086FA1;
+}
+
+#inner {
+  width: 100px;
+  height: 100px;
+  background-color: #3CA0D0;
+}
+
+#result {
+  clear: left;
+}
+
+code {
+  font-size: 1.2em;
+}
+
+p, ul {
+  margin: 0 0 25px;
+}
+	</style>
+</head>
+<body>
+	<p>点击里层和外层元素看看区别</p>
+	<div id="outer">
+	  <div id="inner"></div>
+	</div>
+	<div id="result"></div>
+	<script>
+		var outer = document.getElementById('outer'),
+    result = document.getElementById('result');
+
+outer.addEventListener('click', function (e) {
+  var html = '';
+  if (e.target === outer && e.currentTarget === outer) {
+    html += '<p>外层元素被点击 - 既是 <code>e.target</code> 也是 <code>e.currentTarget</code>.</p>';
+  }
+
+  if (e.target !== outer && e.currentTarget === outer) {
+    html += '<p>外层元素是 <code>e.currentTarget</code>, 但不是直接点击</p>';
+  }
+
+  html += [
+    '<ul>',
+      '<li><code>e.target === &lt;div id="', e.target.id, '"&gt;</code></li>',
+      '<li><code>e.currentTarget === &lt;div id="', e.currentTarget.id, '"&gt;</code></li>',
+    '</ul>'
+  ].join('');
+
+  result.innerHTML = html;
+
+});
+
+	</script>
+</body>
+</html>

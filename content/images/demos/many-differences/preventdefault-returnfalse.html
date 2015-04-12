@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>停止冒泡、阻止默认和return false</title>
+	<style>
+		#outer, #outer1{
+  width: 50px;
+  height:50px;
+  background-color: #086FA1;
+  padding: 50px;
+  float: left;
+}
+#inner, #inner1{
+  width: 50px;
+  height:50px;
+  background-color: #3CA0D0;
+}
+	</style>
+</head>
+<body>
+	<p>冒泡（点击不同颜色区域看看区别）</p>
+	<div>
+	  <div id="outer">
+	    <div id="inner">点我</div>
+	  </div>
+	  <div id="result"></div>
+	  <div style="clear:both"></div>
+	</div>
+	<p>不冒泡（点击不同颜色区域看看区别）</p>
+	<div>
+	  <div id="outer1">
+	    <div id="inner1">点我</div>
+	  </div>
+	  <div id="result1"></div>
+	  <div style="clear:both"></div>
+	</div>
+	<p> </p>
+	<div>
+	  <a href="http://blog.liuwanlin.info" target="_blank">不阻止默认行为，打开新建页面</a>
+	</div>
+	<div>
+	  <a id="preventlink" href="http://blog.liuwanlin.info" target="_blank">阻止默认行为，不打开新建页面</a>
+	</div>
+	<p> </p>
+	<div>
+	  <a id="falselink" href="http://blog.liuwanlin.info" target="_blank">return false，不打开新建页面</a>
+	</div>
+	<script>
+		//事件冒泡
+		document.querySelector("#outer").onclick = function(e){
+		  var res = document.querySelector("#result");
+		  var ele = e.target || e.srcElement;
+		  if(ele == this){
+		    res.innerHTML = "";
+		  }
+		  res.innerHTML += "<p>click outer</p>";
+		}
+
+		document.querySelector("#inner").onclick = function(e){
+		  var res = document.querySelector("#result");
+		  var ele = e.target || e.srcElement;
+		  if(ele == this){
+		    res.innerHTML = "";
+		  }
+		  res.innerHTML += "<p>click inner</p>";
+		}
+
+		//事件不冒泡
+		document.querySelector("#outer1").onclick = function(e){
+		  var res = document.querySelector("#result1");
+		  var ele = e.target || e.srcElement;
+		  if(ele == this){
+		    res.innerHTML = "";
+		  }
+		  res.innerHTML += "<p>click outer</p>";
+		}
+
+		document.querySelector("#inner1").onclick = function(e){
+		  var res = document.querySelector("#result1");
+		  var ele = e.target || e.srcElement;
+		  if(ele == this){
+		    res.innerHTML = "";
+		  }
+		  res.innerHTML += "<p>click inner</p>";
+		  e.stopPropagation();
+		}
+
+		//preventDefault
+		document.querySelector("#preventlink").onclick = function(e){
+		  e.preventDefault();
+		  alert("click link");
+		}
+
+		//return false
+		document.querySelector("#falselink").onclick = function(e){
+		  alert("click link");
+		  return false;
+		}
+	</script>
+</body>
+</html>
