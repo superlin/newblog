@@ -690,6 +690,27 @@ pre {
 .archive a{
   text-decoration: none;
 }
+
+/*====================================================
+  catalog
+====================================================*/
+.catalog-fixed {
+  position: fixed;
+  top: 20px;
+  width: 360px;
+}
+
+@media (max-width: 1199px) {
+  .catalog-fixed {
+    width: 293px;
+  }
+}
+
+@media (max-width: 991px) {
+  .catalog-fixed {
+    display: none;
+  }
+}
 /*====================================================
 	media query
 ====================================================*/
