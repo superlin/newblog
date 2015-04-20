@@ -711,6 +711,51 @@ pre {
     display: none;
   }
 }
+
+/*====================================================
+  music
+====================================================*/
+.music-wrap a {
+  display: block;
+  position: fixed;
+  bottom: 320px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  background-color: #d0648a;
+  padding: 10px;
+  font-size: 30px;
+  color: white;
+  box-shadow: 2px 2px 2px #BEBEBE;
+
+  transition: 1s;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+}
+
+.music-wrap a.on {
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+}
+
+.music-wrap a:hover {
+  color: white;
+}
+
+.music-panel {
+  position: fixed;
+  bottom: 0;
+  right: 60px;
+  height: 400px;
+}
+
 /*====================================================
 	media query
 ====================================================*/
