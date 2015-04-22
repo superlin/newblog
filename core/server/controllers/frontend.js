@@ -186,7 +186,7 @@ frontendControllers = {
               }
             },
             to: [
-              data.name + ' <1092793900@qq.com>'
+              'admin <liuwl_hg@163.com>'
             ]
           }
         };
