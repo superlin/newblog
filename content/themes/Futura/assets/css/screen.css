@@ -696,7 +696,7 @@ pre {
 ====================================================*/
 .catalog-fixed {
   position: fixed;
-  top: 20px;
+  top: 0;
   width: 360px;
 }
 
