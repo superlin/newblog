@@ -1,11 +1,11 @@
-window.onload = function(){
-    // 添加sidebar
-    var sidebar = document.querySelector(".sidebar");
-    var allh3 = document.querySelectorAll(".main-content h3");
+$(document).ready(function(){
+    // 添加文章目录
+    var sidebar = $(".sidebar");
+    var allh3 = $(".main-content h3");
     var html = '';
     Array.prototype.slice.call(allh3, 0).forEach(function(h3,i){
         var id = "h3-"+(i+1);
-        var txt = h3.innerHTML.trim();
+        var txt = $(h3).html().trim();
         h3.id = id;
         html += "<li><a href='#"+id+"''>"+txt+"</a></li>";
     });
@@ -13,7 +13,7 @@ window.onload = function(){
               '<h4 class="title">Content</h4>' +
               "<ul>"+html+"</ul>"+
             '</div>';
-    sidebar.innerHTML += html;
+    sidebar.append(html);
 
     // scrollTop大小
     var scTop = function() {
@@ -35,11 +35,18 @@ window.onload = function(){
         }
     }
 
-    // 初始化与监听
+    // 监听scorll事件
     var $catalog = $(".catalog-brief");
     var sideTop = $catalog.offset().top;
     addFixed(sideTop);
     $(window).scroll(function(){
         addFixed(sideTop);
-    })
-};
+    });
+
+    //添加音乐播放器
+    $(".music-panel iframe").attr("src", "http://music.163.com/outchain/player?type=0&id=67251026&auto=0&height=430");
+    $(".music-wrap a").click(function() {
+      $(this).toggleClass('on');
+      $(".music-panel").toggle();
+    });
+});

@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{{asset "css/font-awesome.min.css"}}">
 
     <link rel="stylesheet" href="{{asset "css/screen.css"}}">
+
     <script>
     /*====================================================
       THEME SETTINGS & GLOBAL VARIABLES
@@ -34,6 +35,7 @@
     var sidebar_left = false; // Set true or flase for positioning sidebar on left
 
     </script>
+    {{ghost_foot}}
     {{! Ghost outputs important style and meta data with this tag }}
     {{ghost_head}}
 </head>
@@ -168,16 +170,8 @@
         <a class="dp-button sb-bt active" id="right_sb">Sidebar Right</a>
     </div>
 
-    {{!-- 网易云音乐 --}}
-    <div class="music-wrap">
-        <a href="javascript:;"><i class="fa fa-music"></i></a>
-        <div class="music-panel" hidden>
-            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=450 src="http://music.163.com/outchain/player?type=0&id=67251026&auto=0&height=430"></iframe>
-        </div>
-    </div>
-
     {{! Ghost outputs important scripts and data with this tag }}
-    {{ghost_foot}}
+    {{!-- {{ghost_foot}} --}}
 
     <script src="{{asset "js/bootstrap.min.js"}}"></script>
     <script src="{{asset "js/highlight.pack.js"}}"></script>

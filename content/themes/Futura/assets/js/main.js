@@ -33,17 +33,10 @@ var themeApp = {
 			return false;
 		});
 	},
-  toggleMusicPanel: function(){
-    $(".music-wrap a").click(function() {
-      $(this).toggleClass('on');
-      $(".music-panel").toggle();
-    });
-  },
 	init: function() {
 		themeApp.sidebarConfig();
 		themeApp.highlighter();
 		themeApp.backToTop();
-    themeApp.toggleMusicPanel();
 	}
 }
 
