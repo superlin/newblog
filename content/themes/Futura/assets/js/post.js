@@ -35,12 +35,18 @@ $(document).ready(function(){
         }
     }
 
-    // 监听scorll事件
+    // 监听scorll事件（使用函数节流，10帧）
     var $catalog = $(".catalog-brief");
     var sideTop = $catalog.offset().top;
+    var scrollTimer = null;
     addFixed(sideTop);
     $(window).scroll(function(){
-        addFixed(sideTop);
+        if(scrollTimer) {
+            clearTimerout(scrollTimer);
+        }
+        resizeTimer = setTimeout(function(){
+            addFixed(sideTop);
+        }, 100);
     });
 
     //添加音乐播放器
