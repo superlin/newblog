@@ -221,7 +221,7 @@ postLookup.include = 'author,tags,fields,next,previous';
 代码略。
 
 ####3.6.联系（contact）
-主要用于联系页面，发送消息到我的邮箱，可以去[联系页面](/contact)试试哦
+主要用于联系页面，发送消息到我的邮箱
 
 也是先添加路由，再添加处理函数，这里用到了[nodemailer](https://github.com/andris9/Nodemailer)模块。
 
@@ -230,7 +230,7 @@ postLookup.include = 'author,tags,fields,next,previous';
 ####3.7.目录
 添加目录
 
-###3.8.文章音乐
+####3.8.文章音乐
 文章中添加163音乐
 
 ###4.优化
