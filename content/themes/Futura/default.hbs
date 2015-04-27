@@ -64,14 +64,19 @@
                     <div class="widget">
                         <h4 class="title">Tags</h4>
                         {{!-- <div class="content tag-cloud"></div> --}}
-                        {{tag_cloud limit=15}}
+                        {{tag_cloud limit=20}}
                     </div>
                     <!-- end tag cloud widget -->
                     <!-- start widget -->
                     <div class="widget">
-                        <h4 class="title">Announcement</h4>
+                        <h4 class="title">Follow</h4>
                         <div class="content">
-                            Dear visitors, if you have any questions to discuss with me, just click the <a href="/contact">contact page</a> and send an email to me. I am very glad to hear from you.
+                          <ul class="social">
+                            <li><a href="http://weibo.com/wlliu1990"><i class="fa fa-weibo"></i></a></li>
+                            <li><a href="https://github.com/superlin"><i class="fa fa-github"></i></a></li>
+                            <li><a href="https://twitter.com/superlin1990"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="{{@blog.url}}/rss"><i class="fa fa-rss"></i></a></li>
+                          </ul>
                         </div>
                     </div>
                     <!-- end widget -->
@@ -101,7 +106,7 @@
                     <!-- start tag cloud widget -->
                     <div class="widget">
                         <h4 class="title">Tags</h4>
-                        {{tag_cloud limit=15}}
+                        {{tag_cloud limit=20}}
                     </div>
                     <!-- end tag cloud widget -->
                 </div>
@@ -153,7 +158,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    Copyright &copy; 2015, <a href="{{@blog.url}}">{{@blog.title}}</a>.  All Right Reserved
+                    Copyright &copy; 2014, <a href="{{@blog.url}}">{{@blog.title}}</a>.  All Right Reserved
                 </div>
             </div>
         </div>
