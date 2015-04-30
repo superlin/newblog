@@ -3,15 +3,25 @@
 
 原来的Ghost博客版本为0.5.1，现在Ghost博客已经升级到0.5.10，新版本的Ghost相对于原来的版本有了很多的新功能，包括标签编辑、SEO等多个选项，新的特性是吸引人的，因此我也觉得升级我的博客到最新的0.5.10。
 
-###1.数据备份 Ghost的所有数据都存在`/content`下，`/content/data`下为数据库文件，`/content/images`下为所有的图片文件，`/content/themes`下为主题文件，将这些文件备份。
+###1.数据备份
 
-此外根目录下的`config.js`是博客的配置文件，因此也需要备份。 ###2.主题替换 此前博客使用的是Ghost 0.5.1，主题也是挺不错的，而且还是响应式的。
+Ghost的所有数据都存在`/content`下，`/content/data`下为数据库文件，`/content/images`下为所有的图片文件，`/content/themes`下为主题文件，将这些文件备份。
+
+此外根目录下的`config.js`是博客的配置文件，因此也需要备份。 
+
+###2.主题替换
+
+此前博客使用的是Ghost 0.5.1，主题也是挺不错的，而且还是响应式的。
 
 但是旧的主题的功能相对较少，页面比较单一，没有边栏，无法添加标签云等功能，这也是我要升级的重要原因之一。
 
 新的主题同样是使用了Bootstrap，也是响应式的，但是多了边栏和简单的主题设定。
 
-###3.新功能添加 Ghost提供了许多API，可以利用这些API实现博客的定制，下面就列举出我主要添加的功能。 ####3.1.标签云（tag cloud）
+###3.新功能添加
+
+Ghost提供了许多API，可以利用这些API实现博客的定制，下面就列举出我主要添加的功能。 
+
+####3.1.标签云（tag cloud）
 
 **添加helper**：`/core/server/helpers/`新增`tag_cloud.js`
 
@@ -139,7 +149,9 @@ registerAsyncThemeHelper('recent_posts', coreHelpers.recent_posts);
 {{recent_posts}}
 ```
 
-####3.3.关键字（meta keywords） 这个helper主要是用于SEO，可以将文章标签放到meta头部的keywos中。
+####3.3.关键字（meta keywords）
+
+这个helper主要是用于SEO，可以将文章标签放到meta头部的keywos中。
 
 **添加helper**：`/core/server/helpers/`新增`meta_keywords.js`
 
@@ -195,7 +207,9 @@ registerAsyncThemeHelper('meta_keywords', coreHelpers.meta_keywords);
 <meta name="keywords" content="{{meta_keywords}}">
 ```
 
-####3.4.上下篇链接`core/server/controllers/frontpage.js`的`single`方法对应的就是获取单篇博文内容。
+####3.4.上下篇链接
+
+`core/server/controllers/frontpage.js`的`single`方法对应的就是获取单篇博文内容。
 
 第384行附近添加`next`和`previous`
 
@@ -220,23 +234,33 @@ postLookup.include = 'author,tags,fields,next,previous';
 </nav>
 ```
 
-####3.5.归档（archives） 简单的按时间顺序列出博文。
+####3.5.归档（archives）
+
+简单的按时间顺序列出博文。
 
 先在`/core/server/routes/frontend.js`中添加路由，然后在`/core/server/controllers/frontend.js`添加处理函数。
 
 代码略。
 
-####3.6.联系（contact） 主要用于联系页面，发送消息到我的邮箱
+####3.6.联系（contact）
+
+主要用于联系页面，发送消息到我的邮箱
 
 也是先添加路由，再添加处理函数，这里用到了[nodemailer](https://github.com/andris9/Nodemailer)模块。
 
 具体代码略。
 
-####3.7.目录 添加目录
+####3.7.目录
 
-####3.8.文章音乐 文章中添加163音乐
+添加目录
 
-###4.优化**页面加载优化**：之前用到多个css和js文件，合并了css和js，之前最近文章和标签云是通过`/rss`来获取，明显加载有延时，将这部分功能移到后台，最近文章和标签云的加载速度明显加快。通过Chrome DevTools的Network看出页面重新加载速度由4s变为了不到2s，好的情况下只有1s。
+####3.8.文章音乐
+
+文章中添加163音乐
+
+###4.优化
+
+**页面加载优化**：之前用到多个css和js文件，合并了css和js，之前最近文章和标签云是通过`/rss`来获取，明显加载有延时，将这部分功能移到后台，最近文章和标签云的加载速度明显加快。通过Chrome DevTools的Network看出页面重新加载速度由4s变为了不到2s，好的情况下只有1s。
 
 **为部分标签（tags）添加图标**：选取了部分图片，使用Photoshop简单处理图片,得到了几个常用的100\*100的图标。
 
