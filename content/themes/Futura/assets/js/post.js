@@ -19,20 +19,20 @@ $(document).ready(function(){
     // scrollTop大小
     function scTop() {
         if( typeof window.pageYOffset != 'undefined') {
-            return window.pageYOffset;
+          return window.pageYOffset;
         } else if( typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
-            return document.documentElement.scrollTop
+          return document.documentElement.scrollTop
         } else if( typeof document.body != 'undefined') {
-            return document.body.scrollTop;
+          return document.body.scrollTop;
         }
     }
 
     // 添加fixed
     function addFixed($catalog, sideTop) {
         if(sideTop < scTop()){
-            if(!$catalog.hasClass('catalog-fixed')) $catalog.addClass("catalog-fixed");
+          if(!$catalog.hasClass('catalog-fixed')) $catalog.addClass("catalog-fixed");
         } else {
-            if($catalog.hasClass('catalog-fixed')) $catalog.removeClass("catalog-fixed");
+          if($catalog.hasClass('catalog-fixed')) $catalog.removeClass("catalog-fixed");
         }
     }
 
@@ -40,11 +40,16 @@ $(document).ready(function(){
     function catlogFixed() {
       var $catalog = $(".catalog-brief");
       var sideTop = $catalog.offset().top;
+      var timeid = null;
       addFixed($catalog, sideTop);
       $(window).scroll(function(){
-          setTimeout(function(){
-              addFixed($catalog, sideTop);
-          }, 100);
+        if (timeid != null) {
+          return;
+        }
+        timeid = setTimeout(function(){
+          addFixed($catalog, sideTop);
+          timeid = null;
+        }, 100);
       });
     }
 
