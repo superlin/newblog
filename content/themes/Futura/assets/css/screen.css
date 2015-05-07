@@ -698,6 +698,7 @@ pre {
   position: fixed;
   top: 0;
   width: 360px;
+  z-index: 2;
 }
 
 @media (max-width: 1199px) {
@@ -716,7 +717,7 @@ pre {
   music
 ====================================================*/
 .music-wrap a {
-  z-index: 1;
+  z-index: 3;
   display: block;
   position: fixed;
   bottom: 320px;
@@ -751,7 +752,7 @@ pre {
 }
 
 .music-panel {
-  z-index: 1;
+  z-index: 3;
   position: fixed;
   bottom: 0;
   right: 60px;

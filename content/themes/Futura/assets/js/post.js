@@ -40,13 +40,9 @@ $(document).ready(function(){
     function catlogFixed() {
       var $catalog = $(".catalog-brief");
       var sideTop = $catalog.offset().top;
-      var scrollTimer = null;
       addFixed($catalog, sideTop);
       $(window).scroll(function(){
-          if(scrollTimer) {
-              clearTimeout(scrollTimer);
-          }
-          scrollTimer = setTimeout(function(){
+          setTimeout(function(){
               addFixed($catalog, sideTop);
           }, 100);
       });
