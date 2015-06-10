@@ -713,12 +713,12 @@ pre {
   }
 }
 
-.catalog-fixed ul {
+.catalog-brief ul {
   padding-left: 20px;
   list-style-type: square;
 }
 
-.catalog-fixed > ul {
+.catalog-brief > ul {
   max-height: 400px;
   overflow-y: auto;
 }
