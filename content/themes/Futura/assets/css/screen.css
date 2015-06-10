@@ -713,6 +713,16 @@ pre {
   }
 }
 
+.catalog-fixed ul {
+  padding-left: 20px;
+  list-style-type: square;
+}
+
+.catalog-fixed > ul {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 /*====================================================
   music
 ====================================================*/

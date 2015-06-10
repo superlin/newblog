@@ -1,14 +1,31 @@
 $(document).ready(function(){
     // 添加文章目录
-    function appendLists(allh3) {
+    function appendLists(allh3h4) {
       var sidebar = $(".sidebar");
       var html = '';
-      Array.prototype.slice.call(allh3, 0).forEach(function(h3,i){
-          var id = "h3-"+(i+1);
-          var txt = $(h3).html().trim();
-          h3.id = id;
-          html += "<li><a href='#"+id+"''>"+txt+"</a></li>";
-      });
+      var i, ele, len;
+      for (i = 0, len = allh3h4.length; i < len; i++) {
+          ele = allh3h4[i];
+          html += "<li><a href='#"+(ele.id = "h3-"+i)+"''>"+$(ele).html()+"</a></li>";
+          if (ele.tagName === 'H3' && (i+1) < len && allh3h4[i+1].tagName === 'H4') {
+              i++;
+              html += "<ul>";
+              while (i < len) {
+                  ele = allh3h4[i];
+                  if (ele.tagName === 'H3') break;
+                  
+                  html += "<li><a href='#"+(ele.id = "h4-"+i)+"''>"+$(ele).html()+"</a></li>";
+                  i++;
+              }
+              html += "</ul>";
+          }
+      }
+      // [].slice.call(allh3, 0).forEach(function(h3,i){
+        //   var id = "h3-"+(i+1);
+        //   var txt = $(h3).html().trim();
+        //   h3.id = id;
+        //   html += "<li><a href='#"+id+"''>"+txt+"</a></li>";
+      // });
       html = '<div class="widget catalog-brief">'+
                 '<h4 class="title">Content</h4>' +
                 "<ul>"+html+"</ul>"+
@@ -63,9 +80,9 @@ $(document).ready(function(){
     }
 
     // 初始化
-    var allh3 = $(".main-content h3");
-    if (allh3.length > 0) {
-      appendLists(allh3);
+    var allh3h4 = $(".main-content").find("h3,h4");
+    if (allh3h4.length > 0) {
+      appendLists(allh3h4);
       catlogFixed();
     }
     addMusic();
