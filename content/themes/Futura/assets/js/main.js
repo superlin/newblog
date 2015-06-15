@@ -182,7 +182,7 @@ $(document).ready(function(){
       styles += 'blockquote {border-left: 4px solid '+color+';}'
       styles += '::-moz-selection{background: '+color+';}'
       styles += '::selection{background: '+color+';}'
-      styles += '.main-header {background-color: '+color+';}'
+      styles += '.archive:hover{border-color: ' + color + ';}'
       styles += '.main-navigation .menu li:hover > a {color: '+color+';}'
       styles += '.main-navigation .menu li ul:hover > a {color: '+color+';}'
       styles += '.post .featured {background: '+color+';}'

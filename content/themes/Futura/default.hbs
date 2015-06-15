@@ -35,13 +35,46 @@
     var sidebar_left = false; // Set true or flase for positioning sidebar on left
 
     </script>
-    {{ghost_foot}}
     {{! Ghost outputs important style and meta data with this tag }}
     {{ghost_head}}
 </head>
 <body class="{{body_class}}">
-
-    {{navigation}}
+    
+    <!--header-->
+    <header class="main-header" id="site-head">
+        <div class="col-md-9">
+            <div class="site-description">
+                <h1 class="blog-title">{{@blog.title}}</h1>
+                <h2 class="blog-description">{{@blog.description}}</h2>
+            </div>
+        </div>
+    </header>
+    <!--header end-->
+    
+    <!-- start navigation -->
+    <nav class="main-navigation">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="navbar-header">
+                        <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-bars"></i>
+                        </span>
+                    </div>
+                    <div class="collapse navbar-collapse" id="main-menu">
+                        <ul class="menu">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/archives">Archives</a></li>
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- end navigation -->
 
     <!-- start site's main content area -->
     <section class="content-wrap">
@@ -84,7 +117,15 @@
                 <!-- end sidebar -->
             </div>
         </div>
-
+        
+        <!--setting panel-->
+        <div id="setting_panel">
+            <a href="" id="setting_panel_toggle"><i class="fa fa-tint"></i></a>
+            <div id="picker_holder"></div>
+            <a class="dp-button dfc-bt" id="default_color">Default Color</a>
+            <a class="dp-button sb-bt" id="left_sb">Sidebar Left</a>
+            <a class="dp-button sb-bt active" id="right_sb">Sidebar Right</a>
+        </div>
     </section>
 
     <!-- start main-footer -->
@@ -167,16 +208,9 @@
 
     <!--back to top-->
     <a href="#" id="back-to-top" title="Back to Top"><i class="fa fa-angle-up"></i></a>
-    <div id="setting_panel">
-        <a href="" id="setting_panel_toggle"><i class="fa fa-tint"></i></a>
-        <div id="picker_holder"></div>
-        <a class="dp-button dfc-bt" id="default_color">Default Color</a>
-        <a class="dp-button sb-bt" id="left_sb">Sidebar Left</a>
-        <a class="dp-button sb-bt active" id="right_sb">Sidebar Right</a>
-    </div>
 
     {{! Ghost outputs important scripts and data with this tag }}
-    {{!-- {{ghost_foot}} --}}
+    {{ghost_foot}}
 
     <script src="{{asset "js/bootstrap.min.js"}}"></script>
     <script src="{{asset "js/highlight.pack.js"}}"></script>

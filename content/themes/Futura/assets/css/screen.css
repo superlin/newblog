@@ -125,25 +125,62 @@ pre {
   background: #00ada7;
   text-shadow: none;
 }
+
+.content-wrap {
+  position: relative;
+}
+
 /*====================================================
 	header
 ====================================================*/
-.main-header {
-  text-align: center;
-  padding: 42px 0;
-  background: #00ada7;
+#site-head {
+  background: #343434;;
+  background-image: url(/assets/images/pencraft-bg.jpg);
+  background-attachment: fixed;
+  background-size: 100% auto;
 }
-.main-header .branding {
-  font-size: 3.5em;
-  font-family: 'Roboto Slab', 'Helvetica Neue', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Microsoft Yahei', sans-serif;
-  color: #303030;
+
+#site-head h2, #site-head h1 {
+  color: #fff;
 }
-.main-header .branding:hover {
-  text-decoration: none;
+
+.site-description {
+  min-height: 300px;
+  padding: 100px;
+  position: relative;
 }
-.main-header .branding img {
-  max-width: 100%;
+
+.blog-title {
+  font-size: 72px;
+  line-height: 72px;
+  letter-spacing: -1px;
+  margin: 10px 0;
+  text-transform: uppercase;
+  font-weight: bolder;
 }
+
+.blog-description {
+  margin: 0;
+  font-size: 1.8rem;
+  line-height: 1.5em;
+  font-weight: 300;
+  font-family: 'Roboto Slab', serif;
+  letter-spacing: 0;
+  position: relative;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.blog-description:before {
+  background: none repeat scroll 0 0 #4c4c50;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 110px;
+}
+
 .navbar-header {
   text-align: center;
 }
@@ -223,6 +260,7 @@ pre {
   filter: alpha(opacity=(100));
   top: 100%;
 }
+
 /*====================================================
 	main post area
 ====================================================*/
@@ -795,12 +833,169 @@ pre {
     filter: alpha(opacity=(100));
   }
 }
+
 @media (min-width: 768px) {
   .nav-toggle-button {
     display: none;
   }
 }
 
+/* ==========================================================================
+   1. Media Queries - Greater than 1600px
+   ========================================================================== */
+
+
+@media only screen and (min-width: 1601px) {
+
+    #site-head {
+      min-height: 700px;
+    }
+    .site-description {
+      padding: 200px;
+    }
+
+    .blog-title {
+      font-size: 96px!important;
+      line-height: 96px!important;
+    }
+
+    .blog-description {
+      font-size: 28px!important;
+      line-height: 36px!important;
+    }
+}
+
+
+/* ==========================================================================
+   2. Media Queries - Greater than 1400px
+   ========================================================================== */
+
+
+@media only screen and (min-width: 1401px) {
+
+    .blog-title {
+      font-size: 84px;
+      line-height: 84px;
+    }
+
+    .blog-description {
+      font-size: 24px;
+    }
+}
+
+
+/* ==========================================================================
+   3. Media Queries - 1366px
+   ========================================================================== */
+
+
+@media only screen and (max-width: 1366px) {
+
+  #site-head {
+    min-height: 500px;
+  }
+
+}
+
+
+
+/* ==========================================================================
+   4. Media Queries - 1170px
+   ========================================================================== */
+
+
+
+/* ==========================================================================
+   4.a. Media Queries - Smaller than 1170px
+   ========================================================================== */
+
+  @media only screen and (max-width: 1169px) {
+
+    #site-head {
+      min-height: 450px;
+    }
+
+  }
+
+
+
+/* ==========================================================================
+   5. Media Queries - Smaller than 992px
+   ========================================================================== */
+
+
+@media only screen and (max-width: 992px) {
+
+    #site-head {
+      min-height: 400px;
+    }
+
+}
+
+
+/* ==========================================================================
+   6. Media Queries - Smaller than 768px
+   ========================================================================== */
+
+
+@media only screen and (max-width: 767px) {
+
+  #site-head {
+    min-height: 300px;
+  }
+
+  .site-description {
+    padding: 50px;
+  }
+
+  .blog-title {
+    font-size: 54px;
+    letter-spacing: -1px;
+    line-height: 54px;
+    margin: 15px 0;
+  }
+
+  .blog-description {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .blog-description:before {
+    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
+  }
+
+}
+
+
+/* ==========================================================================
+   7. Media Queries - Smaller than 480px
+   ========================================================================== */
+
+
+@media only screen and (max-width: 479px) {
+
+  #site-head {
+    min-height: 200px;
+  }
+
+  .site-description {
+    padding: 20px;
+    min-height: 236px;
+  }
+
+  .blog-title {
+    font-size: 36px;
+    letter-spacing: -1px;
+    line-height: 40px;
+    margin: 15px 0;
+  }
+
+  .blog-description {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+}
 
 
 /**********************************************
@@ -1237,8 +1432,8 @@ colpick Color Picker / colpick.com
   settings panel custom css
 ====================================================*/
 #setting_panel {
-  position: fixed;
-  top: 100px;
+  position: absolute;
+  top: 0;
   left: -226px;
   background: #2a2a2a;
   padding: 10px;
