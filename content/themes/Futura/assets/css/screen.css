@@ -138,7 +138,7 @@ pre {
   background-image: url(/assets/images/pencraft-bg.jpg);
   background-attachment: fixed;
   background-size: 100% auto;
-  min-height: 650px;
+  min-height: 600px;
   display: block;
   position: relative;
 }
@@ -749,7 +749,7 @@ pre {
 }
 
 @media (max-width: 991px) {
-  .catalog-fixed {
+  .catalog-brief {
     display: none;
   }
 }
