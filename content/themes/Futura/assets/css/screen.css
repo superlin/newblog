@@ -138,6 +138,9 @@ pre {
   background-image: url(/assets/images/pencraft-bg.jpg);
   background-attachment: fixed;
   background-size: 100% auto;
+  min-height: 650px;
+  display: block;
+  position: relative;
 }
 
 #site-head h2, #site-head h1 {
