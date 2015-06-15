@@ -12,8 +12,8 @@
     <div class="post-head">
         <h2 class="post-title"><a href="{{url}}">{{{title}}}</a></h2>
         <div class="post-meta">
-            <span class="author">By {{author}}</span> •
-            <span class="date">{{date format="MMMM DD, YYYY"}}</span> •
+            <span class="author"><i class="fa fa-user"></i> {{author}}</span> •
+            <span class="date"><i class="fa fa-calendar"></i> {{date format="MMMM DD, YYYY"}}</span> •
             <span class="comment-count"><a href="{{url}}#ds-thread">Comment now</a></span>
         </div>
     </div>
@@ -38,7 +38,7 @@
     {{!-- 标签和分享 --}}
     <footer class="post-footer clearfix">
         <div class="pull-left tag-list">
-            <i class="fa fa-folder-open-o"></i>
+            <i class="fa fa-tags"></i>
             {{tags}}
         </div>
         <div class="pull-right share">
