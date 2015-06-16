@@ -188,8 +188,6 @@ $(document).ready(function(){
       styles += '.post .featured {background: '+color+';}'
       styles += '.post .post-footer .tag-list a:hover {color: '+color+';}'
       styles += '.post .post-footer .share .share-icons li a:hover i {background: '+color+'; border: 1px solid '+color+';}'
-      styles += '.pagination a {background: '+color+';}'
-      styles += '.pagination .page-number {background: '+color+';}'
       styles += '.widget .title:after {background: '+color+';}'
       styles += '.widget .social li a:hover i {background: '+color+'; border: 1px solid '+color+';}'
       styles += '.widget .tag-cloud a:hover {background: '+color+'; border: 1px solid '+color+';}'

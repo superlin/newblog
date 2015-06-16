@@ -4,7 +4,7 @@ body {
   font-size: 14px;
   color: #505050;
   line-height: 1.75em;
-  background: #ebebeb;
+  background: #E5EAED;
   position: relative;
   overflow-x: hidden;
 }
@@ -67,11 +67,17 @@ a img {
   -ms-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
 }
 .btn-default:hover {
   border: 1px solid #303030;
   background: #303030;
   color: #ffffff;
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
+  -moz-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
 }
 .btn-default:focus {
   outline: none;
@@ -386,6 +392,10 @@ pre {
   background: #00ada7;
   border: 1px solid #00ada7;
 }
+
+.post-permalink a {
+  float: right;
+}
 /*====================================================
 	pagination
 ====================================================*/
@@ -394,35 +404,10 @@ pre {
   text-align: center;
   display: block;
 }
-.pagination a {
-  text-align: center;
-  display: inline-block;
-  color: #ffffff;
-  background: #00ada7;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-.pagination a i {
-  width: 36px;
-  height: 36px;
-  line-height: 36px;
-}
-.pagination a:hover {
-  background: #505050;
-  text-decoration: none;
-  color: #ffffff;
-}
+
 .pagination .page-number {
-  background: #00ada7;
-  color: #ffffff;
   margin: 0 3px;
-  display: inline-block;
-  line-height: 36px;
   padding: 0 14px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
 }
 /*====================================================
 	about author and comment
