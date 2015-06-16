@@ -12,7 +12,10 @@ $(document).ready(function () {
                 html += "<ul>";
                 while (i < len) {
                     ele = allh3h4[i];
-                    if (ele.tagName === 'H3') break;
+                    if (ele.tagName === 'H3') {
+                        i--;
+                        break;
+                    }
 
                     html += "<li><a href='#" + (ele.id = "h4-" + i) + "''>" + $(ele).html() + "</a></li>";
                     i++;
