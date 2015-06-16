@@ -8,7 +8,7 @@
  1. function declearetion
  ==========================*/
 var themeApp = {
-	sidebarConfig:function() {
+	sidebarConfig: function() {
 		if(sidebar_left == true) {
 			$('.main-content').addClass('col-md-push-4');
 			$('.sidebar').addClass('col-md-pull-8');

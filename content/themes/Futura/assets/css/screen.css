@@ -6,6 +6,7 @@ body {
   line-height: 1.75em;
   background: #ebebeb;
   position: relative;
+  overflow-x: hidden;
 }
 h1,
 h2,
@@ -141,6 +142,7 @@ pre {
   min-height: 600px;
   display: block;
   position: relative;
+  overflow: hidden;
 }
 
 #site-head h2, #site-head h1 {
