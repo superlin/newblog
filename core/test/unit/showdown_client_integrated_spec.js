@@ -10,12 +10,7 @@ var should      = require('should'),
 
 // Stuff we are testing
     Showdown    = require('showdown-ghost'),
-    ghostgfm            = require('../../shared/lib/showdown/extensions/ghostgfm'),
-    ghostimagepreview   = require('../../shared/lib/showdown/extensions/ghostimagepreview'),
-    footnotes      = require('../../shared/lib/showdown/extensions/ghostfootnotes'),
-    highlight      = require('../../shared/lib/showdown/extensions/ghosthighlight'),
-
-    converter   = new Showdown.converter({extensions: [ghostimagepreview, ghostgfm, footnotes, highlight]});
+    converter   = new Showdown.converter({extensions: ['ghostimagepreview', 'ghostgfm', 'footnotes', 'highlight']});
 
 // To stop jshint complaining
 should.equal(true, true);
@@ -46,13 +41,13 @@ describe('Showdown client side converter', function () {
         processedMarkup.should.match(testPhrase.output);
     });
 
-// Currently failing - fixing this causes other issues
-//    it('should not create italic words between lines', function () {
-//        var testPhrase = {input: 'foo_bar\nbar_foo', output: /^<p>foo_bar <br \/>\nbar_foo<\/p>$/},
-//            processedMarkup = converter.makeHtml(testPhrase.input);
-//
-//        processedMarkup.should.match(testPhrase.output);
-//    });
+    // Currently failing - fixing this causes other issues
+    // it('should not create italic words between lines', function () {
+    //     var testPhrase = {input: 'foo_bar\nbar_foo', output: /^<p>foo_bar <br \/>\nbar_foo<\/p>$/},
+    //         processedMarkup = converter.makeHtml(testPhrase.input);
+
+    //     processedMarkup.should.match(testPhrase.output);
+    // });
 
     it('should not touch underscores in code blocks', function () {
         var testPhrase = {input: '    foo_bar_baz', output: /^<pre><code>foo_bar_baz\n<\/code><\/pre>$/},
@@ -523,7 +518,7 @@ describe('Showdown client side converter', function () {
 
             {
                 input: '![^1](bar)',
-                output: '<section id="image_upload_undefined" class="js-drop-zone image-uploader"><img class="js-upload-target" src="bar"/><div class="description">Add image of <strong>^1</strong></div><input data-url="upload" class="js-fileupload main fileupload" type="file" name="uploadimage"></section>'
+                output: '<section class="js-drop-zone image-uploader"><img class="js-upload-target" src="bar"/><div class="description">Add image of <strong>^1</strong></div><input data-url="upload" class="js-fileupload main fileupload" type="file" name="uploadimage"></section>'
             }
         ];
 
@@ -581,15 +576,15 @@ describe('Showdown client side converter', function () {
 
     it('should not effect pre tags', function () {
         var testPhrase = {
-                    input:  '```javascript\n' +
-                            'var foo = "bar";\n' +
-                            'if (foo === "bar") {\n' +
-                            '    return true;\n' +
-                            '} else if (foo === "baz") {\n' +
-                            '    return "magic happened";\n' +
-                            '}\n' +
-                            '```',
-                    output: /^<mark><\/mark>$/
+            input:  '```javascript\n' +
+                    'var foo = "bar";\n' +
+                    'if (foo === "bar") {\n' +
+                    '    return true;\n' +
+                    '} else if (foo === "baz") {\n' +
+                    '    return "magic happened";\n' +
+                    '}\n' +
+                    '```',
+            output: /^<mark><\/mark>$/
         },
             processedMarkup = converter.makeHtml(testPhrase.input);
 
@@ -622,17 +617,17 @@ describe('Showdown client side converter', function () {
         });
     });
 
-    //      Waiting for showdown typography to be updated
-    //    it('should correctly convert quotes to curly quotes', function () {
-    //        var testPhrases = [
-    //            {
-    //                input: 'Hello world\nIt's a fine day\nout',
-    //                output: /^<p>Hello world <br \/>\nIt’s a fine day <br \/>\nout<\/p>$/}
-    //        ];
-    //
-    //        testPhrases.forEach(function (testPhrase) {
-    //            processedMarkup = converter.makeHtml(testPhrase.input);
-    //            processedMarkup.should.match(testPhrase.output);
-    //        });
-    //    })
+    // Waiting for showdown typography to be updated
+    // it('should correctly convert quotes to curly quotes', function () {
+    //    var testPhrases = [
+    //        {
+    //            input: 'Hello world\nIt's a fine day\nout',
+    //            output: /^<p>Hello world <br \/>\nIt’s a fine day <br \/>\nout<\/p>$/}
+    //    ];
+
+    //    testPhrases.forEach(function (testPhrase) {
+    //        processedMarkup = converter.makeHtml(testPhrase.input);
+    //        processedMarkup.should.match(testPhrase.output);
+    //    });
+    // });
 });

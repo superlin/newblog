@@ -257,7 +257,7 @@ describe('Import', function () {
                 (1).should.eql(0, 'Data import should not resolve promise.');
             }, function (error) {
                 error[0].message.should.eql('Value in [posts.title] exceeds maximum length of 150 characters.');
-                error[0].type.should.eql('ValidationError');
+                error[0].errorType.should.eql('ValidationError');
 
                 Promise.all([
                     knex('users').select(),
@@ -302,7 +302,7 @@ describe('Import', function () {
                 (1).should.eql(0, 'Data import should not resolve promise.');
             }, function (error) {
                 error[0].message.should.eql('Value in [settings.key] cannot be blank.');
-                error[0].type.should.eql('ValidationError');
+                error[0].errorType.should.eql('ValidationError');
 
                 Promise.all([
                     knex('users').select(),
@@ -429,7 +429,7 @@ describe('Import', function () {
                 (1).should.eql(0, 'Data import should not resolve promise.');
             }, function (error) {
                 error[0].message.should.eql('Value in [posts.title] exceeds maximum length of 150 characters.');
-                error[0].type.should.eql('ValidationError');
+                error[0].errorType.should.eql('ValidationError');
 
                 Promise.all([
                     knex('users').select(),
@@ -473,7 +473,7 @@ describe('Import', function () {
                 (1).should.eql(0, 'Data import should not resolve promise.');
             }, function (error) {
                 error[0].message.should.eql('Value in [settings.key] cannot be blank.');
-                error[0].type.should.eql('ValidationError');
+                error[0].errorType.should.eql('ValidationError');
 
                 Promise.all([
                     knex('users').select(),
@@ -567,15 +567,15 @@ describe('Import', function () {
                 done(new Error('Allowed import of duplicate data'));
             }).catch(function (response) {
                 response.length.should.equal(5);
-                response[0].type.should.equal('ValidationError');
+                response[0].errorType.should.equal('ValidationError');
                 response[0].message.should.eql('Value in [posts.title] cannot be blank.');
-                response[1].type.should.equal('ValidationError');
+                response[1].errorType.should.equal('ValidationError');
                 response[1].message.should.eql('Value in [posts.slug] cannot be blank.');
-                response[2].type.should.equal('ValidationError');
+                response[2].errorType.should.equal('ValidationError');
                 response[2].message.should.eql('Value in [settings.key] cannot be blank.');
-                response[3].type.should.equal('ValidationError');
+                response[3].errorType.should.equal('ValidationError');
                 response[3].message.should.eql('Value in [tags.slug] cannot be blank.');
-                response[4].type.should.equal('ValidationError');
+                response[4].errorType.should.equal('ValidationError');
                 response[4].message.should.eql('Value in [tags.name] cannot be blank.');
                 done();
             }).catch(done);
@@ -590,7 +590,7 @@ describe('Import', function () {
                 done(new Error('Allowed import of duplicate data'));
             }).catch(function (response) {
                 response.length.should.be.above(0);
-                response[0].type.should.equal('DataImportError');
+                response[0].errorType.should.equal('DataImportError');
                 done();
             }).catch(done);
         });
@@ -607,7 +607,7 @@ describe('Import', function () {
             }).catch(function (response) {
                 response.length.should.equal(1);
                 response[0].message.should.eql('Attempting to import data linked to unknown user id 2');
-                response[0].type.should.equal('DataImportError');
+                response[0].errorType.should.equal('DataImportError');
 
                 done();
             }).catch(done);
@@ -627,9 +627,9 @@ describe('Import', function () {
                 done(new Error('Allowed import of invalid tags data'));
             }).catch(function (response) {
                 response.length.should.equal(2);
-                response[0].type.should.equal('ValidationError');
+                response[0].errorType.should.equal('ValidationError');
                 response[0].message.should.eql('Value in [tags.name] cannot be blank.');
-                response[1].type.should.equal('ValidationError');
+                response[1].errorType.should.equal('ValidationError');
                 response[1].message.should.eql('Value in [tags.slug] cannot be blank.');
                 done();
             }).catch(done);
@@ -1365,6 +1365,78 @@ describe('Import (new test structure)', function () {
                 tag1.updated_by.should.equal(ownerUser.id);
                 tag2.updated_by.should.equal(ownerUser.id);
                 tag3.updated_by.should.equal(ownerUser.id);
+
+                done();
+            }).catch(done);
+        });
+    });
+
+    describe('imports multi user data onto existing data without duplicate owners', function () {
+        var exportData;
+
+        before(function doImport(done) {
+            knex = config.database.knex;
+
+            // initialise the blog with some data
+            testUtils.initFixtures('users:roles', 'posts', 'settings').then(function () {
+                return testUtils.fixtures.loadExportFixture('export-003-mu-multipleOwner');
+            }).then(function (exported) {
+                exportData = exported;
+                return importer.doImport(exportData);
+            }).then(function () {
+                done();
+            }).catch(done);
+        });
+        after(testUtils.teardown);
+
+        it('imports users with correct roles and status', function (done) {
+            var fetchImported = Promise.join(
+                knex('users').select(),
+                knex('roles_users').select()
+            );
+
+            fetchImported.then(function (importedData) {
+                var ownerUser,
+                    newUser,
+                    existingUser,
+                    users,
+                    rolesUsers;
+
+                // General data checks
+                should.exist(importedData);
+                importedData.length.should.equal(2, 'Did not get data successfully');
+
+                // Test the users and roles
+                users = importedData[0];
+                rolesUsers = importedData[1];
+
+                // the owner user is first
+                ownerUser = users[0];
+
+                // the other two users should have the imported data, but they get inserted in different orders
+                newUser = _.find(users, function (user) {
+                    return user.name === exportData.data.users[1].name;
+                });
+                existingUser = _.find(users, function (user) {
+                    return user.name === exportData.data.users[2].name;
+                });
+
+                // we imported 3 users, there were already 4 users, only one of the imported users is new
+                users.length.should.equal(5, 'There should only be three users');
+
+                rolesUsers.length.should.equal(5, 'There should be 5 role relations');
+
+                _.each(rolesUsers, function (roleUser) {
+                    if (roleUser.user_id === ownerUser.id) {
+                        roleUser.role_id.should.equal(4, 'Original user should be an owner');
+                    }
+                    if (roleUser.user_id === newUser.id) {
+                        roleUser.role_id.should.equal(1, 'New user should be downgraded from owner to admin');
+                    }
+                    if (roleUser.user_id === existingUser.id) {
+                        roleUser.role_id.should.equal(1, 'Existing user was an admin');
+                    }
+                });
 
                 done();
             }).catch(done);
