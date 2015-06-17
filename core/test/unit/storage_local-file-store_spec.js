@@ -27,7 +27,7 @@ describe('Local File System Storage', function () {
 
         sinon.stub(fs, 'mkdirs').yields();
         sinon.stub(fs, 'copy').yields();
-        sinon.stub(fs, 'stat').yields(true);
+        sinon.stub(fs, 'exists').yields(false);
         sinon.stub(fs, 'unlink').yields();
 
         image = {
@@ -45,7 +45,7 @@ describe('Local File System Storage', function () {
     afterEach(function () {
         fs.mkdirs.restore();
         fs.copy.restore();
-        fs.stat.restore();
+        fs.exists.restore();
         fs.unlink.restore();
         this.clock.restore();
     });
@@ -96,13 +96,13 @@ describe('Local File System Storage', function () {
     it('can upload two different images with the same name without overwriting the first', function (done) {
         // Sun Sep 08 2013 10:57
         this.clock = sinon.useFakeTimers(new Date(2013, 8, 8, 10, 57).getTime());
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE-1.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE-1.jpg')).yields(false);
 
         // if on windows need to setup with back slashes
         // doesn't hurt for the test to cope with both
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-1.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-1.jpg')).yields(false);
 
         localFileStore.save(image).then(function (url) {
             url.should.equal('/content/images/2013/09/IMAGE-1.jpg');
@@ -113,18 +113,18 @@ describe('Local File System Storage', function () {
     it('can upload five different images with the same name without overwriting the first', function (done) {
         // Sun Sep 08 2013 10:57
         this.clock = sinon.useFakeTimers(new Date(2013, 8, 8, 10, 57).getTime());
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE-1.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE-2.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE-3.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('./content/images/2013/09/IMAGE-4.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE-1.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE-2.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE-3.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('./content/images/2013/09/IMAGE-4.jpg')).yields(false);
 
         // windows setup
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-1.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-2.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-3.jpg')).yields(false);
-        fs.stat.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-4.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-1.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-2.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-3.jpg')).yields(true);
+        fs.exists.withArgs(path.resolve('.\\content\\images\\2013\\Sep\\IMAGE-4.jpg')).yields(false);
 
         localFileStore.save(image).then(function (url) {
             url.should.equal('/content/images/2013/09/IMAGE-4.jpg');

@@ -5,7 +5,7 @@ function BadRequestError(message) {
     this.message = message;
     this.stack = new Error().stack;
     this.code = 400;
-    this.errorType = this.name;
+    this.type = this.name;
 }
 
 BadRequestError.prototype = Object.create(Error.prototype);

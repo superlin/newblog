@@ -33,11 +33,12 @@ adminControllers = {
             }
 
             var notification = {
-                type: 'upgrade',
-                location: 'settings-about-upgrade',
+                type: 'success',
+                location: 'top',
                 dismissible: false,
                 status: 'persistent',
-                message: 'Ghost ' + updateVersion + ' is available! Hot Damn. <a href="http://support.ghost.org/how-to-upgrade/" target="_blank">Click here</a> to upgrade.'
+                message: '<a href="https://ghost.org/download">Ghost ' + updateVersion +
+                '</a> is available! Hot Damn. Please <a href="http://support.ghost.org/how-to-upgrade/" target="_blank">upgrade</a> now'
             };
 
             return api.notifications.browse({context: {internal: true}}).then(function (results) {

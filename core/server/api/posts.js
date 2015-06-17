@@ -45,7 +45,7 @@ posts = {
      * Can return posts for a particular tag by passing a tag slug in
      *
      * @public
-     * @param {{context, page, limit, status, staticPages, tag, featured}} options (optional)
+     * @param {{context, page, limit, status, staticPages, tag}} options (optional)
      * @returns {Promise(Posts)} Posts Collection with Meta
      */
     browse: function browse(options) {
@@ -64,20 +64,19 @@ posts = {
 
     /**
      * ### Read
-     * Find a post, by ID, UUID, or Slug
+     * Find a post, by ID or Slug
      *
      * @public
      * @param {{id_or_slug (required), context, status, include, ...}} options
      * @return {Promise(Post)} Post
      */
     read: function read(options) {
-        var attrs = ['id', 'slug', 'status', 'uuid'],
+        var attrs = ['id', 'slug', 'status'],
             data = _.pick(options, attrs);
-
         options = _.omit(options, attrs);
 
         // only published posts if no user is present
-        if (!data.uuid && !(options.context && options.context.user)) {
+        if (!(options.context && options.context.user)) {
             data.status = 'published';
         }
 
@@ -87,7 +86,7 @@ posts = {
 
         return dataProvider.Post.findOne(data, options).then(function (result) {
             if (result) {
-                return {posts: [result.toJSON(options)]};
+                return {posts: [result.toJSON()]};
             }
 
             return Promise.reject(new errors.NotFoundError('Post not found.'));
@@ -113,7 +112,7 @@ posts = {
                 return dataProvider.Post.edit(checkedPostData.posts[0], options);
             }).then(function (result) {
                 if (result) {
-                    var post = result.toJSON(options);
+                    var post = result.toJSON();
 
                     // If previously was not published and now is (or vice versa), signal the change
                     post.statusChanged = false;
@@ -150,7 +149,7 @@ posts = {
 
                 return dataProvider.Post.add(checkedPostData.posts[0], options);
             }).then(function (result) {
-                var post = result.toJSON(options);
+                var post = result.toJSON();
 
                 if (post.status === 'published') {
                     // When creating a new post that is published right now, signal the change

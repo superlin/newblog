@@ -10,13 +10,7 @@ var hbs             = require('express-hbs'),
 
 asset = function (context, options) {
     var output = '',
-        isAdmin,
-        minify;
-
-    if (options && options.hash) {
-        isAdmin = options.hash.ghost;
-        minify = options.hash.minifyInProduction;
-    }
+        isAdmin = options && options.hash && options.hash.ghost;
 
     output += config.paths.subdir + '/';
 
@@ -30,12 +24,6 @@ asset = function (context, options) {
 
     // Get rid of any leading slash on the context
     context = context.replace(/^\//, '');
-
-    // replace ".foo" with ".min.foo" in production
-    if (utils.isProduction && minify) {
-        context = context.replace('.', '.min.');
-    }
-
     output += context;
 
     if (!context.match(/^favicon\.ico$/)) {

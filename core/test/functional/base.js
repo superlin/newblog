@@ -127,14 +127,16 @@ screens = {
     }
 };
 
-casper.writeContentToEditor = function (content) {
+casper.writeContentToCodeMirror = function (content) {
+    var lines = content.split('\n');
+
     // If we are on a new editor, the autosave is going to get triggered when we try to type, so we need to trigger
     // that and wait for it to sort itself out
     if (/ghost\/editor\/$/.test(casper.getCurrentUrl())) {
-        casper.waitForSelector('.entry-markdown-content textarea', function onSuccess() {
-            casper.click('.entry-markdown-content textarea');
+        casper.waitForSelector('.CodeMirror-wrap textarea', function onSuccess() {
+            casper.click('.CodeMirror-wrap textarea');
         }, function onTimeout() {
-            casper.test.fail('Editor was not found on initial load.');
+            casper.test.fail('CodeMirror was not found on initial load.');
         }, 2000);
 
         casper.waitForUrl(/\/ghost\/editor\/\d+\/$/, function onSuccess() {
@@ -144,15 +146,17 @@ casper.writeContentToEditor = function (content) {
         }, 2000);
     }
 
-    casper.waitForSelector('.entry-markdown-content textarea', function onSuccess() {
-        casper.sendKeys('.entry-markdown-content textarea', content, {keepFocus: true});
-        // Always end with a new line
-        casper.sendKeys('.entry-markdown-content textarea', '\n', {keepFocus: true});
-        casper.captureScreenshot('EditorText.png');
+    casper.waitForSelector('.CodeMirror-wrap textarea', function onSuccess() {
+        casper.each(lines, function (self, line) {
+            self.sendKeys('.CodeMirror-wrap textarea', line, {keepFocus: true});
+            self.sendKeys('.CodeMirror-wrap textarea', casper.page.event.key.Enter, {keepFocus: true});
+        });
+
+        casper.captureScreenshot('CodeMirror-Text.png');
 
         return this;
     }, function onTimeout() {
-        casper.test.fail('Editor was not found on main load.');
+        casper.test.fail('CodeMirror was not found on main load.');
     }, 2000);
 };
 
@@ -289,7 +293,7 @@ casper.captureScreenshot = function (filename, debugOnly) {
     }
 };
 
-// on failure, grab a screenshot
+ // on failure, grab a screenshot
 casper.test.on('fail', function captureFailure() {
     casper.captureScreenshot(casper.test.filename || 'casper_test_fail.png', false);
     casper.then(function () {
@@ -456,7 +460,7 @@ CasperTest.Routines = (function () {
     function createTestPost(publish) {
         casper.thenOpenAndWaitForPageLoad('editor', function createTestPost() {
             casper.sendKeys('#entry-title', testPost.title);
-            casper.writeContentToEditor(testPost.html);
+            casper.writeContentToCodeMirror(testPost.html);
             casper.sendKeys('#entry-tags input.tag-input', 'TestTag');
             casper.sendKeys('#entry-tags input.tag-input', casper.page.event.key.Enter);
         });

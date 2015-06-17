@@ -51,7 +51,7 @@ describe('Helpers Template', function () {
         });
     });
 
-    describe('getThemeViewForChannel', function () {
+    describe('getThemeViewForTag', function () {
         var themePathsWithTagViews = {
                 assets: null,
                 'default.hbs': '/content/themes/casper/default.hbs',
@@ -64,20 +64,19 @@ describe('Helpers Template', function () {
                 'default.hbs': '/content/themes/casper/default.hbs',
                 'index.hbs': '/content/themes/casper/index.hbs'
             },
-            CHANNEL = 'tag',
-            CUSTOM_EXISTS = 'design',
-            DEFAULT = 'development';
+            TAG_CUSTOM_EXISTS = 'design',
+            TAG_DEFAULT = 'development';
 
         it('will return correct view for a tag', function () {
-            var view = template.getThemeViewForChannel(themePathsWithTagViews, CHANNEL, CUSTOM_EXISTS);
+            var view = template.getThemeViewForTag(themePathsWithTagViews, TAG_CUSTOM_EXISTS);
             view.should.exist;
             view.should.eql('tag-design');
 
-            view = template.getThemeViewForChannel(themePathsWithTagViews, CHANNEL, DEFAULT);
+            view = template.getThemeViewForTag(themePathsWithTagViews, TAG_DEFAULT);
             view.should.exist;
             view.should.eql('tag');
 
-            view = template.getThemeViewForChannel(themePaths, CHANNEL, DEFAULT);
+            view = template.getThemeViewForTag(themePaths, TAG_DEFAULT);
             view.should.exist;
             view.should.eql('index');
         });

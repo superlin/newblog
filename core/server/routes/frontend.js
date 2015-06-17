@@ -5,10 +5,9 @@ var frontend    = require('../controllers/frontend'),
 
     frontendRoutes;
 
-frontendRoutes = function (middleware) {
+frontendRoutes = function () {
     var router = express.Router(),
-        subdir = config.paths.subdir,
-        routeKeywords = config.routeKeywords;
+        subdir = config.paths.subdir;
 
     // ### Admin routes
     router.get(/^\/(logout|signout)\/$/, function redirect(req, res) {
@@ -28,18 +27,6 @@ frontendRoutes = function (middleware) {
         res.redirect(subdir + '/ghost/');
     });
 
-    // password-protected frontend route
-    router.get('/' + routeKeywords.private + '/',
-        middleware.isPrivateSessionAuth,
-        frontend.private
-    );
-    router.post('/' + routeKeywords.private + '/',
-        middleware.isPrivateSessionAuth,
-        middleware.spamProtectedPrevention,
-        middleware.authenticateProtection,
-        frontend.private
-    );
-
     // ### Frontend routes
     router.get('/rss/', frontend.rss);
     router.get('/rss/:page/', frontend.rss);
@@ -50,22 +37,19 @@ frontendRoutes = function (middleware) {
     });
 
     // Tags
-    router.get('/' + routeKeywords.tag + '/:slug/rss/', frontend.rss);
-    router.get('/' + routeKeywords.tag + '/:slug/rss/:page/', frontend.rss);
-    router.get('/' + routeKeywords.tag + '/:slug/' + routeKeywords.page + '/:page/', frontend.tag);
-    router.get('/' + routeKeywords.tag + '/:slug/', frontend.tag);
+    router.get('/tag/:slug/rss/', frontend.rss);
+    router.get('/tag/:slug/rss/:page/', frontend.rss);
+    router.get('/tag/:slug/page/:page/', frontend.tag);
+    router.get('/tag/:slug/', frontend.tag);
 
     // Authors
-    router.get('/' + routeKeywords.author + '/:slug/rss/', frontend.rss);
-    router.get('/' + routeKeywords.author + '/:slug/rss/:page/', frontend.rss);
-    router.get('/' + routeKeywords.author + '/:slug/' + routeKeywords.page + '/:page/', frontend.author);
-    router.get('/' + routeKeywords.author + '/:slug/', frontend.author);
-
-    // Post Live Preview
-    router.get('/' + routeKeywords.preview + '/:uuid', frontend.preview);
+    router.get('/author/:slug/rss/', frontend.rss);
+    router.get('/author/:slug/rss/:page/', frontend.rss);
+    router.get('/author/:slug/page/:page/', frontend.author);
+    router.get('/author/:slug/', frontend.author);
 
     // Default
-    router.get('/' + routeKeywords.page + '/:page/', frontend.homepage);
+    router.get('/page/:page/', frontend.homepage);
     router.get('/', frontend.homepage);
     router.get('*', frontend.single);
 

@@ -5,20 +5,21 @@
 /*global require, module */
 
 var moment      = require('moment'),
-    rss         = require('../data/xml/rss'),
+    RSS         = require('rss'),
     _           = require('lodash'),
+    url         = require('url'),
     Promise     = require('bluebird'),
     api         = require('../api'),
     config      = require('../config'),
     filters     = require('../filters'),
     template    = require('../helpers/template'),
     errors      = require('../errors'),
+    cheerio     = require('cheerio'),
     routeMatch  = require('path-match')(),
-    path        = require('path'),
     nodemailer  = require('nodemailer'),
 
     frontendControllers,
-    staticPostPermalink;
+    staticPostPermalink,
 
 // Cache static post permalink regex
 staticPostPermalink = routeMatch('/:slug/:edit?');
@@ -43,6 +44,14 @@ function getPostPage(options) {
  * @return {Object} containing page variables
  */
 function formatPageResponse(posts, page, extraValues) {
+    // Delete email from author for frontend output
+    // TODO: do this on API level if no context is available
+    posts = _.each(posts, function (post) {
+        if (post.author) {
+            delete post.author.email;
+        }
+        return post;
+    });
     extraValues = extraValues || {};
 
     var resp = {
@@ -57,6 +66,12 @@ function formatPageResponse(posts, page, extraValues) {
  * @return {Object} containing page variables
  */
 function formatResponse(post) {
+    // Delete email from author for frontend output
+    // TODO: do this on API level if no context is available
+    if (post.author) {
+        delete post.author.email;
+    }
+
     return {
         post: post
     };
@@ -70,28 +85,23 @@ function handleError(next) {
 
 function setResponseContext(req, res, data) {
     var contexts = [],
-        pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,
-        tagPattern = new RegExp('^\\/' + config.routeKeywords.tag + '\\/'),
-        authorPattern = new RegExp('^\\/' + config.routeKeywords.author + '\\/'),
-        privatePattern = new RegExp('^\\/' + config.routeKeywords.private + '\\/');
+        pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1;
 
     // paged context
     if (!isNaN(pageParam) && pageParam > 1) {
         contexts.push('paged');
     }
 
-    if (req.route.path === '/' + config.routeKeywords.page + '/:page/') {
+    if (req.route.path === '/page/:page/') {
         contexts.push('index');
     } else if (req.route.path === '/') {
         contexts.push('home');
         contexts.push('index');
     } else if (/\/rss\/(:page\/)?$/.test(req.route.path)) {
         contexts.push('rss');
-    } else if (privatePattern.test(req.route.path)) {
-        contexts.push('private');
-    } else if (tagPattern.test(req.route.path)) {
+    } else if (/^\/tag\//.test(req.route.path)) {
         contexts.push('tag');
-    } else if (authorPattern.test(req.route.path)) {
+    } else if (/^\/author\//.test(req.route.path)) {
         contexts.push('author');
     } else if (data && data.post && data.post.page) {
         contexts.push('page');
@@ -128,106 +138,6 @@ function getActiveThemePaths() {
     });
 }
 
-/*
-* Sets the response context around a post and renders it
-* with the current theme's post view. Used by post preview
-* and single post methods.
-* Returns a function that takes the post to be rendered.
-*/
-function renderPost(req, res) {
-    return function (post) {
-        return getActiveThemePaths().then(function (paths) {
-            var view = template.getThemeViewForPost(paths, post),
-                response = formatResponse(post);
-
-            setResponseContext(req, res, response);
-            res.render(view, response);
-        });
-    };
-}
-
-function renderChannel(channelOpts) {
-    channelOpts = channelOpts || {};
-
-    return function renderChannel(req, res, next) {
-        var pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,
-            options = {
-                page: pageParam
-            },
-            hasSlug,
-            filter, filterKey;
-
-        // Add the slug if it exists in the route
-        if (channelOpts.route.indexOf(':slug') !== -1) {
-            options[channelOpts.name] = req.params.slug;
-            hasSlug = true;
-        }
-
-        function createUrl(page) {
-            var url = config.paths.subdir + channelOpts.route;
-
-            if (hasSlug) {
-                url = url.replace(':slug', options[channelOpts.name]);
-            }
-
-            if (page && page > 1) {
-                url += 'page/' + page + '/';
-            }
-
-            return url;
-        }
-
-        if (isNaN(pageParam) || pageParam < 1 || (req.params.page !== undefined && pageParam === 1)) {
-            return res.redirect(createUrl());
-        }
-
-        return getPostPage(options).then(function (page) {
-            // If page is greater than number of pages we have, redirect to last page
-            if (pageParam > page.meta.pagination.pages) {
-                return res.redirect(createUrl(page.meta.pagination.pages));
-            }
-
-            setReqCtx(req, page.posts);
-            if (channelOpts.filter && page.meta.filters[channelOpts.filter]) {
-                filterKey = page.meta.filters[channelOpts.filter];
-                filter = (_.isArray(filterKey)) ? filterKey[0] : filterKey;
-                setReqCtx(req, filter);
-            }
-
-            filters.doFilter('prePostsRender', page.posts, res.locals).then(function (posts) {
-                getActiveThemePaths().then(function (paths) {
-                    var view = 'index',
-                        result,
-                        extra = {};
-
-                    if (channelOpts.firstPageTemplate && paths.hasOwnProperty(channelOpts.firstPageTemplate + '.hbs')) {
-                        view = (pageParam > 1) ? 'index' : channelOpts.firstPageTemplate;
-                    } else if (channelOpts.slugTemplate) {
-                        view = template.getThemeViewForChannel(paths, channelOpts.name, options[channelOpts.name]);
-                    } else if (paths.hasOwnProperty(channelOpts.name + '.hbs')) {
-                        view = channelOpts.name;
-                    }
-
-                    if (channelOpts.filter) {
-                        extra[channelOpts.name] = (filterKey) ? filter : '';
-
-                        if (!extra[channelOpts.name]) {
-                            return next();
-                        }
-
-                        result = formatPageResponse(posts, page, extra);
-                    } else {
-                        result = formatPageResponse(posts, page);
-                    }
-
-                    setResponseContext(req, res);
-                    res.render(view, result);
-                });
-            });
-        }).catch(handleError(next));
-    };
-}
-
 frontendControllers = {
     about: function (req, res, next) {
         return res.render('about');
@@ -240,7 +150,10 @@ frontendControllers = {
             limit:'all'
         };
         return api.posts.browse(options).then(function (posts) {
+            setReqCtx(req, posts.posts);
             filters.doFilter('prePostsRender', posts.posts).then(function (posts) {
+
+                setResponseContext(req, res);
                 res.render('archives', {posts : posts});
             });
         }).catch(handleError(next));
@@ -265,7 +178,7 @@ frontendControllers = {
         var config = {
           mail:{
             from:{
-              name: '流星博客',
+              name: '娴佹槦鍗氬',
               host: 'smtp.163.com',
               auth: {
                 user: 'wlliu_hg@163.com',
@@ -281,7 +194,7 @@ frontendControllers = {
         var mailOptions = {
             from: [config.mail.from.name, config.mail.from.auth.user].join(' '),
             to: config.mail.to.join(','),
-            subject: "博客中有人联系你",
+            subject: "鍗氬涓湁浜鸿仈绯讳綘",
             html: html
         };
         smtpTransport.sendMail(mailOptions, function(error, response){
@@ -293,52 +206,150 @@ frontendControllers = {
             smtpTransport.close();
         });
     },
-    homepage: renderChannel({
-        name: 'home',
-        route: '/',
-        firstPageTemplate: 'home'
-    }),
-    tag: renderChannel({
-        name: 'tag',
-        route: '/' + config.routeKeywords.tag + '/:slug/',
-        filter: 'tags',
-        slugTemplate: true
-    }),
-    author: renderChannel({
-        name: 'author',
-        route: '/' + config.routeKeywords.author + '/:slug/',
-        filter: 'author',
-        slugTemplate: true
-    }),
-    preview: function (req, res, next) {
-        var params = {
-                uuid: req.params.uuid,
-                status: 'all',
-                include: 'author,tags,fields'
+    homepage: function (req, res, next) {
+        // Parse the page number
+        var pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,
+            options = {
+                page: pageParam
             };
 
-        api.posts.read(params).then(function (result) {
-            var post = result.posts[0];
+        // No negative pages, or page 1
+        if (isNaN(pageParam) || pageParam < 1 || (pageParam === 1 && req.route.path === '/page/:page/')) {
+            return res.redirect(config.paths.subdir + '/');
+        }
 
-            if (!post) {
-                return next();
+        return getPostPage(options).then(function (page) {
+            // If page is greater than number of pages we have, redirect to last page
+            if (pageParam > page.meta.pagination.pages) {
+                return res.redirect(page.meta.pagination.pages === 1 ? config.paths.subdir + '/' : (config.paths.subdir + '/page/' + page.meta.pagination.pages + '/'));
             }
 
-            if (post.status === 'published') {
-                return res.redirect(301, config.urlFor('post', {post: post}));
+            setReqCtx(req, page.posts);
+            // Render the page of posts
+            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                getActiveThemePaths().then(function (paths) {
+                    var view = paths.hasOwnProperty('home.hbs') ? 'home' : 'index';
+
+                    // If we're on a page then we always render the index
+                    // template.
+                    if (pageParam > 1) {
+                        view = 'index';
+                    }
+
+                    setResponseContext(req, res);
+                    res.render(view, formatPageResponse(posts, page));
+                });
+            });
+        }).catch(handleError(next));
+    },
+    tag: function (req, res, next) {
+        // Parse the page number
+        var pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,
+            options = {
+                page: pageParam,
+                tag: req.params.slug
+            };
+
+        // Get url for tag page
+        function tagUrl(tag, page) {
+            var url = config.paths.subdir + '/tag/' + tag + '/';
+
+            if (page && page > 1) {
+                url += 'page/' + page + '/';
             }
 
-            setReqCtx(req, post);
+            return url;
+        }
 
-            filters.doFilter('prePostsRender', post, res.locals)
-                .then(renderPost(req, res));
-        }).catch(function (err) {
-            if (err.errorType === 'NotFoundError') {
-                return next();
+        // No negative pages, or page 1
+        if (isNaN(pageParam) || pageParam < 1 || (req.params.page !== undefined && pageParam === 1)) {
+            return res.redirect(tagUrl(options.tag));
+        }
+
+        return getPostPage(options).then(function (page) {
+            // If page is greater than number of pages we have, redirect to last page
+            if (pageParam > page.meta.pagination.pages) {
+                return res.redirect(tagUrl(options.tag, page.meta.pagination.pages));
             }
 
-            return handleError(next)(err);
-        });
+            setReqCtx(req, page.posts);
+            if (page.meta.filters.tags) {
+                setReqCtx(req, page.meta.filters.tags[0]);
+            }
+
+            // Render the page of posts
+            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                getActiveThemePaths().then(function (paths) {
+                    var view = template.getThemeViewForTag(paths, options.tag),
+                    // Format data for template
+                        result = formatPageResponse(posts, page, {
+                            tag: page.meta.filters.tags ? page.meta.filters.tags[0] : ''
+                        });
+
+                    // If the resulting tag is '' then 404.
+                    if (!result.tag) {
+                        return next();
+                    }
+                    setResponseContext(req, res);
+                    res.render(view, result);
+                });
+            });
+        }).catch(handleError(next));
+    },
+    author: function (req, res, next) {
+        // Parse the page number
+        var pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,
+            options = {
+                page: pageParam,
+                author: req.params.slug
+            };
+
+        // Get url for tag page
+        function authorUrl(author, page) {
+            var url = config.paths.subdir + '/author/' + author + '/';
+
+            if (page && page > 1) {
+                url += 'page/' + page + '/';
+            }
+
+            return url;
+        }
+
+        // No negative pages, or page 1
+        if (isNaN(pageParam) || pageParam < 1 || (req.params.page !== undefined && pageParam === 1)) {
+            return res.redirect(authorUrl(options.author));
+        }
+
+        return getPostPage(options).then(function (page) {
+            // If page is greater than number of pages we have, redirect to last page
+            if (pageParam > page.meta.pagination.pages) {
+                return res.redirect(authorUrl(options.author, page.meta.pagination.pages));
+            }
+
+            setReqCtx(req, page.posts);
+            if (page.meta.filters.author) {
+                setReqCtx(req, page.meta.filters.author);
+            }
+
+            // Render the page of posts
+            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                getActiveThemePaths().then(function (paths) {
+                    var view = paths.hasOwnProperty('author.hbs') ? 'author' : 'index',
+                        // Format data for template
+                        result = formatPageResponse(posts, page, {
+                            author: page.meta.filters.author ? page.meta.filters.author : ''
+                        });
+
+                    // If the resulting author is '' then 404.
+                    if (!result.author) {
+                        return next();
+                    }
+
+                    setResponseContext(req, res);
+                    res.render(view, result);
+                });
+            });
+        }).catch(handleError(next));
     },
 
     single: function (req, res, next) {
@@ -379,7 +390,7 @@ frontendControllers = {
             // Sanitize params we're going to use to lookup the post.
             postLookup = _.pick(params, 'slug', 'id');
             // Add author, tag and fields
-            postLookup.include = 'author,tags,fields';
+            postLookup.include = 'author,tags,fields,next,previous';
 
             // Query database to find post
             return api.posts.read(postLookup);
@@ -406,8 +417,16 @@ frontendControllers = {
 
                 setReqCtx(req, post);
 
-                filters.doFilter('prePostsRender', post, res.locals)
-                    .then(renderPost(req, res));
+                filters.doFilter('prePostsRender', post).then(function (post) {
+                    getActiveThemePaths().then(function (paths) {
+                        var view = template.getThemeViewForPost(paths, post),
+                            response = formatResponse(post);
+
+                        setResponseContext(req, res, response);
+
+                        res.render(view, response);
+                    });
+                });
             }
 
             // If we've checked the path with the static permalink structure
@@ -430,7 +449,7 @@ frontendControllers = {
                 return next();
             }
 
-            // If there is any date based parameter in the slug
+            // If there is any date based paramter in the slug
             // we will check it against the post published date
             // to verify it's correct.
             if (params.year || params.month || params.day) {
@@ -464,29 +483,165 @@ frontendControllers = {
             // If we've thrown an error message
             // of type: 'NotFound' then we found
             // no path match.
-            if (err.errorType === 'NotFoundError') {
+            if (err.type === 'NotFoundError') {
                 return next();
             }
 
             return handleError(next)(err);
         });
     },
-    rss: rss,
-    private: function (req, res) {
-        var defaultPage = path.resolve(config.paths.adminViews, 'private.hbs');
-        return getActiveThemePaths().then(function (paths) {
-            var data = {};
-            if (res.error) {
-                data.error = res.error;
-            }
+    rss: function (req, res, next) {
+        function isPaginated() {
+            return req.route.path.indexOf(':page') !== -1;
+        }
 
-            setResponseContext(req, res);
-            if (paths.hasOwnProperty('private.hbs')) {
-                return res.render('private', data);
-            } else {
-                return res.render(defaultPage, data);
-            }
-        });
+        function isTag() {
+            return req.route.path.indexOf('/tag/') !== -1;
+        }
+
+        function isAuthor() {
+            return req.route.path.indexOf('/author/') !== -1;
+        }
+
+        // Initialize RSS
+        var pageParam = req.params.page !== undefined ? parseInt(req.params.page, 10) : 1,
+            slugParam = req.params.slug,
+            baseUrl = config.paths.subdir;
+
+        if (isTag()) {
+            baseUrl += '/tag/' + slugParam + '/rss/';
+        } else if (isAuthor()) {
+            baseUrl += '/author/' + slugParam + '/rss/';
+        } else {
+            baseUrl += '/rss/';
+        }
+
+        // No negative pages, or page 1
+        if (isNaN(pageParam) || pageParam < 1 || (pageParam === 1 && isPaginated())) {
+            return res.redirect(baseUrl);
+        }
+
+        return Promise.all([
+            api.settings.read('title'),
+            api.settings.read('description'),
+            api.settings.read('permalinks')
+        ]).then(function (result) {
+            var options = {};
+
+            if (pageParam) { options.page = pageParam; }
+            if (isTag()) { options.tag = slugParam; }
+            if (isAuthor()) { options.author = slugParam; }
+
+            options.include = 'author,tags,fields';
+
+            return api.posts.browse(options).then(function (page) {
+                var title = result[0].settings[0].value,
+                    description = result[1].settings[0].value,
+                    permalinks = result[2].settings[0],
+                    majorMinor = /^(\d+\.)?(\d+)/,
+                    trimmedVersion = res.locals.version,
+                    siteUrl = config.urlFor('home', {secure: req.secure}, true),
+                    feedUrl = config.urlFor('rss', {secure: req.secure}, true),
+                    maxPage = page.meta.pagination.pages,
+                    feed;
+
+                trimmedVersion = trimmedVersion ? trimmedVersion.match(majorMinor)[0] : '?';
+
+                if (isTag()) {
+                    if (page.meta.filters.tags) {
+                        title = page.meta.filters.tags[0].name + ' - ' + title;
+                        feedUrl = siteUrl + 'tag/' + page.meta.filters.tags[0].slug + '/rss/';
+                    }
+                }
+
+                if (isAuthor()) {
+                    if (page.meta.filters.author) {
+                        title = page.meta.filters.author.name + ' - ' + title;
+                        feedUrl = siteUrl + 'author/' + page.meta.filters.author.slug + '/rss/';
+                    }
+                }
+
+                feed = new RSS({
+                    title: title,
+                    description: description,
+                    generator: 'Ghost ' + trimmedVersion,
+                    feed_url: feedUrl,
+                    site_url: siteUrl,
+                    ttl: '60'
+                });
+
+                // If page is greater than number of pages we have, redirect to last page
+                if (pageParam > maxPage) {
+                    return res.redirect(baseUrl + maxPage + '/');
+                }
+
+                setReqCtx(req, page.posts);
+                setResponseContext(req, res);
+
+                filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                    posts.forEach(function (post) {
+                        var item = {
+                                title: post.title,
+                                guid: post.uuid,
+                                url: config.urlFor('post', {post: post, permalinks: permalinks}, true),
+                                date: post.published_at,
+                                categories: _.pluck(post.tags, 'name'),
+                                author: post.author ? post.author.name : null
+                            },
+                            htmlContent = cheerio.load(post.html, {decodeEntities: false});
+
+                        if (post.image) {
+                            htmlContent('p').first().before('<img src="' + post.image + '" />');
+                            htmlContent('img').attr('alt', post.title);
+                        }
+
+                        // convert relative resource urls to absolute
+                        ['href', 'src'].forEach(function (attributeName) {
+                            htmlContent('[' + attributeName + ']').each(function (ix, el) {
+                                var baseUrl,
+                                    attributeValue,
+                                    parsed;
+
+                                el = htmlContent(el);
+
+                                attributeValue = el.attr(attributeName);
+
+                                // if URL is absolute move on to the next element
+                                try {
+                                    parsed = url.parse(attributeValue);
+
+                                    if (parsed.protocol) {
+                                        return;
+                                    }
+                                } catch (e) {
+                                    return;
+                                }
+
+                                // compose an absolute URL
+
+                                // if the relative URL begins with a '/' use the blog URL (including sub-directory)
+                                // as the base URL, otherwise use the post's URL.
+                                baseUrl = attributeValue[0] === '/' ? siteUrl : item.url;
+
+                                // prevent double slashes
+                                if (baseUrl.slice(-1) === '/' && attributeValue[0] === '/') {
+                                    attributeValue = attributeValue.substr(1);
+                                }
+
+                                attributeValue = baseUrl + attributeValue;
+                                el.attr(attributeName, attributeValue);
+                            });
+                        });
+
+                        item.description = htmlContent.html();
+                        feed.item(item);
+                    });
+                }).then(function () {
+                    res.set('Content-Type', 'application/rss+xml; charset=UTF-8');
+                    res.send(feed.xml());
+                });
+            });
+        }).catch(handleError(next));
     }
 };
 

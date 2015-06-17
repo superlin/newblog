@@ -139,19 +139,12 @@ describe('Users API', function () {
     });
 
     describe('Read', function () {
-        function checkReadResponse(response, noEmail) {
+        function checkReadResponse(response) {
             should.exist(response);
             should.not.exist(response.meta);
             should.exist(response.users);
             response.users[0].id.should.eql(1);
-
-            if (noEmail) {
-                // Email should be missing
-                testUtils.API.checkResponse(response.users[0], 'user', [], ['email']);
-                should.not.exist(response.users[0].email);
-            } else {
-                testUtils.API.checkResponse(response.users[0], 'user');
-            }
+            testUtils.API.checkResponse(response.users[0], 'user');
             response.users[0].created_at.should.be.a.Date;
         }
 
@@ -187,7 +180,7 @@ describe('Users API', function () {
 
         it('No-auth can read', function (done) {
             UserAPI.read({id: userIdFor.owner}).then(function (response) {
-                checkReadResponse(response, true);
+                checkReadResponse(response);
                 done();
             }).catch(done);
         });
@@ -212,7 +205,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('ID mismatches should not be permitted'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('BadRequestError');
+                    error.type.should.eql('BadRequestError');
                     done();
                 });
         });
@@ -284,7 +277,7 @@ describe('Users API', function () {
             ).then(function () {
                 done(new Error('Editor should not be able to edit owner account'));
             }).catch(function (error) {
-                error.errorType.should.eql('NoPermissionError');
+                error.type.should.eql('NoPermissionError');
             }).finally(function () {
                 // Cannot edit Admin
                 UserAPI.edit(
@@ -292,7 +285,7 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Editor should not be able to edit admin account'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                 }).finally(function () {
                     // Cannot edit Editor
                     UserAPI.edit(
@@ -300,7 +293,7 @@ describe('Users API', function () {
                     ).then(function () {
                         done(new Error('Editor should not be able to edit other editor account'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
                 });
@@ -330,7 +323,7 @@ describe('Users API', function () {
             ).then(function () {
                 done(new Error('Editor should not be able to edit owner account'));
             }).catch(function (error) {
-                error.errorType.should.eql('NoPermissionError');
+                error.type.should.eql('NoPermissionError');
             }).finally(function () {
                 // Cannot edit admin
                 UserAPI.edit(
@@ -338,14 +331,14 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Editor should not be able to edit admin account'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                 }).finally(function () {
                     UserAPI.edit(
                         {users: [{name: newName}]}, _.extend({}, context.author, {id: userIdFor.author2})
                     ).then(function () {
                         done(new Error('Author should not be able to edit author account which is not their own'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
                 });
@@ -418,7 +411,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Owner should not be able to add an owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -491,7 +484,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Admin should not be able to add an owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -561,7 +554,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Editor should not be able to add an owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -586,7 +579,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to add an owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -597,7 +590,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to add an author'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -620,7 +613,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Owner should not be able to delete itself'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -651,7 +644,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Admin should not be able to delete owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -683,7 +676,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Editor should not be able to delete owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -693,7 +686,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Editor should not be able to delete admin'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -703,7 +696,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Editor should not be able to delete other editor'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -731,7 +724,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to delete owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -741,7 +734,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to delete admin'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -751,7 +744,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to delete editor'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -761,7 +754,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to delete other author'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -771,7 +764,7 @@ describe('Users API', function () {
                     .then(function () {
                         done(new Error('Author should not be able to delete self'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     });
             });
@@ -797,7 +790,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('ID mismatches should not be permitted'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('BadRequestError');
+                    error.type.should.eql('BadRequestError');
                     done();
                 });
         });
@@ -936,7 +929,7 @@ describe('Users API', function () {
                     }, options).then(function () {
                         done(new Error('Author should not be able to downgrade owner'));
                     }).catch(function (error) {
-                        error.errorType.should.eql('NoPermissionError');
+                        error.type.should.eql('NoPermissionError');
                         done();
                     }).catch(done);
                 });
@@ -964,7 +957,7 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Editor should not be able to upgrade their role'));
                 }, function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                     done();
                 }).catch(done);
             });
@@ -976,7 +969,7 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Editor should not be able to change the roles of other editors'));
                 }, function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                     done();
                 }).catch(done);
             });
@@ -988,7 +981,7 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Editor should not be able to change the roles of admins'));
                 }, function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                     done();
                 }).catch(done);
             });
@@ -999,7 +992,7 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Editor should not be able to upgrade the role of authors'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                     done();
                 }).catch(done);
             });
@@ -1013,7 +1006,7 @@ describe('Users API', function () {
                 ).then(function () {
                     done(new Error('Author should not be able to upgrade their role'));
                 }, function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                     done();
                 }).catch(done);
             });
@@ -1045,7 +1038,7 @@ describe('Users API', function () {
             ).then(function () {
                 done(new Error('Owner should not be able to downgrade their role'));
             }).catch(function (error) {
-                error.errorType.should.eql('ValidationError');
+                error.type.should.eql('ValidationError');
                 done();
             });
         });
@@ -1058,7 +1051,7 @@ describe('Users API', function () {
             ).then(function () {
                 done(new Error('Admin is not denied transferring ownership.'));
             }).catch(function (error) {
-                error.errorType.should.eql('NoPermissionError');
+                error.type.should.eql('NoPermissionError');
                 done();
             });
         });
@@ -1071,7 +1064,7 @@ describe('Users API', function () {
             ).then(function () {
                 done(new Error('Admin is not denied transferring ownership.'));
             }).catch(function (error) {
-                error.errorType.should.eql('NoPermissionError');
+                error.type.should.eql('NoPermissionError');
                 done();
             });
         });
@@ -1084,7 +1077,7 @@ describe('Users API', function () {
             ).then(function () {
                 done(new Error('Admin is not denied transferring ownership.'));
             }).catch(function (error) {
-                error.errorType.should.eql('NoPermissionError');
+                error.type.should.eql('NoPermissionError');
                 done();
             });
         });
@@ -1120,7 +1113,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('Password change is not denied.'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('ValidationError');
+                    error.type.should.eql('ValidationError');
                     done();
                 });
         });
@@ -1138,7 +1131,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('Password change is not denied.'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('ValidationError');
+                    error.type.should.eql('ValidationError');
                     done();
                 });
         });
@@ -1155,7 +1148,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('Password change is not denied.'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('ValidationError');
+                    error.type.should.eql('ValidationError');
                     done();
                 });
         });
@@ -1172,7 +1165,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('Password change is not denied.'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('ValidationError');
+                    error.type.should.eql('ValidationError');
                     done();
                 });
         });
@@ -1204,7 +1197,7 @@ describe('Users API', function () {
                 .then(function () {
                     done(new Error('Password change is not denied.'));
                 }).catch(function (error) {
-                    error.errorType.should.eql('NoPermissionError');
+                    error.type.should.eql('NoPermissionError');
                     done();
                 });
         });

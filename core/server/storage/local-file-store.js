@@ -42,8 +42,7 @@ LocalFileStore.prototype.save = function (image, targetDir) {
 
 LocalFileStore.prototype.exists = function (filename) {
     return new Promise(function (resolve) {
-        fs.stat(filename, function (err) {
-            var exists = !err;
+        fs.exists(filename, function (exists) {
             resolve(exists);
         });
     });

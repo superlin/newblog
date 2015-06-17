@@ -5,7 +5,7 @@ function UnauthorizedError(message) {
     this.message = message;
     this.stack = new Error().stack;
     this.code = 401;
-    this.errorType = this.name;
+    this.type = this.name;
 }
 
 UnauthorizedError.prototype = Object.create(Error.prototype);

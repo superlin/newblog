@@ -19,15 +19,15 @@ page_url = function (context, block) {
     var url = config.paths.subdir;
 
     if (this.tagSlug !== undefined) {
-        url += '/' + config.routeKeywords.tag + '/' + this.tagSlug;
+        url += '/tag/' + this.tagSlug;
     }
 
     if (this.authorSlug !== undefined) {
-        url += '/' + config.routeKeywords.author + '/' + this.authorSlug;
+        url += '/author/' + this.authorSlug;
     }
 
     if (context > 1) {
-        url += '/' + config.routeKeywords.page + '/' + context;
+        url += '/page/' + context;
     }
 
     url += '/';

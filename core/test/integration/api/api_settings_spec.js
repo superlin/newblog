@@ -107,7 +107,7 @@ describe('Settings API', function () {
             done(new Error('Allowed to read databaseVersion with external request'));
         }).catch(function (error) {
             should.exist(error);
-            error.errorType.should.eql('NoPermissionError');
+            error.type.should.eql('NoPermissionError');
             done();
         }).catch(done);
     });
@@ -153,7 +153,7 @@ describe('Settings API', function () {
             }).catch(function (err) {
                 should.exist(err);
 
-                err.errorType.should.eql('NoPermissionError');
+                err.type.should.eql('NoPermissionError');
 
                 done();
             }).catch(done);
@@ -191,7 +191,7 @@ describe('Settings API', function () {
         }).catch(function (err) {
             should.exist(err);
 
-            err.errorType.should.eql('ValidationError');
+            err.type.should.eql('ValidationError');
 
             done();
         }).catch(done);

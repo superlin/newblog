@@ -1,14 +1,10 @@
 var errors  = require('../errors'),
-    config  = require('../config'),
     storage = {};
 
 function getStorage(storageChoice) {
-    var storagePath,
-        storageConfig;
-
-    storageChoice = config.storage.active;
-    storagePath = config.paths.storage;
-    storageConfig = config.storage[storageChoice];
+    // TODO: this is where the check for storage apps should go
+    // Local file system is the default.  Fow now that is all we support.
+    storageChoice = 'local-file-store';
 
     if (storage[storageChoice]) {
         return storage[storageChoice];
@@ -16,13 +12,13 @@ function getStorage(storageChoice) {
 
     try {
         // TODO: determine if storage has all the necessary methods.
-        storage[storageChoice] = require(storagePath);
+        storage[storageChoice] = require('./' + storageChoice);
     } catch (e) {
         errors.logError(e);
     }
 
     // Instantiate and cache the storage module instance.
-    storage[storageChoice] = new storage[storageChoice](storageConfig);
+    storage[storageChoice] = new storage[storageChoice]();
 
     return storage[storageChoice];
 }

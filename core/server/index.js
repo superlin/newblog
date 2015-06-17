@@ -17,8 +17,7 @@ var express     = require('express'),
     models      = require('./models'),
     permissions = require('./permissions'),
     apps        = require('./apps'),
-    sitemap     = require('./data/xml/sitemap'),
-    xmlrpc      = require('./data/xml/xmlrpc'),
+    sitemap     = require('./data/sitemap'),
     GhostServer = require('./ghost-server'),
 
 // Variables
@@ -67,15 +66,10 @@ function initDbHashAndFirstRun() {
 // any are missing.
 function builtFilesExist() {
     var deferreds = [],
-        location = config.paths.clientAssets,
-        fileNames = ['ghost.js', 'vendor.js', 'ghost.css', 'vendor.css'];
+        location = config.paths.builtScriptPath,
 
-    if (process.env.NODE_ENV === 'production') {
-        // Production uses `.min` files
-        fileNames = fileNames.map(function (file) {
-            return file.replace('.', '.min.');
-        });
-    }
+        fileNames = process.env.NODE_ENV === 'production' ?
+            helpers.scriptFiles.production : helpers.scriptFiles.development;
 
     function checkExist(fileName) {
         var errorMessage = 'Javascript files have not been built.',
@@ -83,14 +77,11 @@ function builtFilesExist() {
                         '\nhttps://github.com/TryGhost/Ghost#getting-started';
 
         return new Promise(function (resolve, reject) {
-            fs.stat(fileName, function (statErr) {
-                var exists = (statErr) ? false : true,
-                    err;
-
+            fs.exists(fileName, function (exists) {
                 if (exists) {
                     resolve(true);
                 } else {
-                    err = new Error(errorMessage);
+                    var err = new Error(errorMessage);
 
                     err.help = errorHelp;
                     reject(err);
@@ -178,9 +169,7 @@ function init(options) {
             // Initialize apps
             apps.init(),
             // Initialize sitemaps
-            sitemap.init(),
-            // Initialize xmrpc ping
-            xmlrpc.init()
+            sitemap.init()
         );
     }).then(function () {
         var adminHbs = hbs.create();
@@ -189,7 +178,7 @@ function init(options) {
         initNotifications();
         // ##Configuration
 
-        // return the correct mime type for woff files
+        // return the correct mime type for woff filess
         express['static'].mime.define({'application/font-woff': ['woff']});
 
         // enabled gzip compression by default

@@ -8,7 +8,7 @@ function ValidationError(message, offendingProperty) {
     if (offendingProperty) {
         this.property = offendingProperty;
     }
-    this.errorType = this.name;
+    this.type = this.name;
 }
 
 ValidationError.prototype = Object.create(Error.prototype);

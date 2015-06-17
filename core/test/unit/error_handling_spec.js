@@ -9,11 +9,14 @@ var should     = require('should'),
 
     // Stuff we are testing
 
-    chalk      = require('chalk'),
+    colors     = require('colors'),
     config     = rewire('../../server/config'),
     errors     = rewire('../../server/errors'),
     // storing current environment
     currentEnv = process.env.NODE_ENV;
+
+// This is not useful but required for jshint
+colors.setTheme({silly: 'rainbow'});
 
 describe('Error handling', function () {
     // Just getting rid of jslint unused error
@@ -70,7 +73,7 @@ describe('Error handling', function () {
 
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.yellow('\nWarning: no message supplied'), '\n');
+                '\nWarning: no message supplied'.yellow, '\n');
 
             // Future tests: This is important here!
             resetEnvironment();
@@ -82,7 +85,7 @@ describe('Error handling', function () {
             errors.logWarn(errorText);
 
             logStub.calledOnce.should.be.true;
-            logStub.calledWith(chalk.yellow('\nWarning: ' + errorText), '\n');
+            logStub.calledWith(('\nWarning: ' + errorText).yellow, '\n');
 
             // Future tests: This is important here!
             resetEnvironment();
@@ -96,7 +99,7 @@ describe('Error handling', function () {
 
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.yellow('\nWarning: ' + errorText), '\n', chalk.white(contextText), '\n'
+                ('\nWarning: ' + errorText).yellow, '\n', contextText.white, '\n'
             );
 
             // Future tests: This is important here!
@@ -112,7 +115,7 @@ describe('Error handling', function () {
 
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.yellow('\nWarning: ' + errorText), '\n', chalk.white(contextText), '\n', chalk.green(helpText), '\n'
+                ('\nWarning: ' + errorText).yellow, '\n', contextText.white, '\n', helpText.green, '\n'
             );
 
             // Future tests: This is important here!
@@ -142,7 +145,7 @@ describe('Error handling', function () {
 
             // Calls log with message on Error objects
             logStub.calledOnce.should.be.true;
-            logStub.calledWith(chalk.red('\nERROR:',  err.message), '\n', '\n', err.stack, '\n').should.be.true;
+            logStub.calledWith('\nERROR:'.red,  err.message.red, '\n', '\n', err.stack, '\n').should.be.true;
         });
 
         it('logs errors from strings', function () {
@@ -152,7 +155,7 @@ describe('Error handling', function () {
 
             // Calls log with string on strings
             logStub.calledOnce.should.be.true;
-            logStub.calledWith(chalk.red('\nERROR:', err), '\n').should.be.true;
+            logStub.calledWith('\nERROR:'.red, err.red, '\n').should.be.true;
         });
 
         it('logs errors from an error object and two string arguments', function () {
@@ -164,7 +167,7 @@ describe('Error handling', function () {
             // Calls log with message on Error objects
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.red('\nERROR:', err.message), '\n', chalk.white(message), '\n', chalk.green(message), '\n', err.stack, '\n'
+                '\nERROR:'.red, err.message.red, '\n', message.white, '\n', message.green, '\n', err.stack, '\n'
             );
         });
 
@@ -176,7 +179,7 @@ describe('Error handling', function () {
             // Calls log with message on Error objects
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.red('\nERROR:', message), '\n', chalk.white(message), '\n', chalk.green(message), '\n'
+                '\nERROR:'.red, message.red, '\n', message.white, '\n', message.green, '\n'
             ).should.be.true;
         });
 
@@ -189,7 +192,7 @@ describe('Error handling', function () {
 
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.red('\nERROR:', 'An unknown error occurred.'), '\n', chalk.white(message), '\n', chalk.green(message), '\n'
+                '\nERROR:'.red, 'An unknown error occurred.'.red, '\n', message.white, '\n', message.green, '\n'
             ).should.be.true;
         });
 
@@ -201,7 +204,7 @@ describe('Error handling', function () {
             // Calls log with message on Error objects
 
             logStub.calledOnce.should.be.true;
-            logStub.calledWith(chalk.red('\nERROR:', message), '\n', chalk.green(message), '\n').should.be.true;
+            logStub.calledWith('\nERROR:'.red, message.red, '\n', message.green, '\n').should.be.true;
         });
 
         it('logs errors from an undefined help argument', function () {
@@ -212,7 +215,7 @@ describe('Error handling', function () {
             // Calls log with message on Error objects
 
             logStub.calledOnce.should.be.true;
-            logStub.calledWith(chalk.red('\nERROR:', message), '\n', chalk.white(message), '\n').should.be.true;
+            logStub.calledWith('\nERROR:'.red, message.red, '\n', message.white, '\n').should.be.true;
         });
 
         it('logs errors from a null error argument', function () {
@@ -224,7 +227,7 @@ describe('Error handling', function () {
 
             logStub.calledOnce.should.be.true;
             logStub.calledWith(
-                chalk.red('\nERROR:', 'An unknown error occurred.'), '\n', chalk.white(message), '\n', chalk.green(message), '\n'
+                '\nERROR:'.red, 'An unknown error occurred.'.red, '\n', message.white, '\n', message.green, '\n'
             ).should.be.true;
         });
 
@@ -236,7 +239,7 @@ describe('Error handling', function () {
             // Calls log with message on Error objects
 
             logStub.calledOnce.should.be.true;
-            logStub.firstCall.calledWith(chalk.red('\nERROR:', message), '\n', chalk.green(message), '\n').should.be.true;
+            logStub.firstCall.calledWith('\nERROR:'.red, message.red, '\n', message.green, '\n').should.be.true;
         });
 
         it('logs errors from a null help argument', function () {
@@ -247,7 +250,7 @@ describe('Error handling', function () {
             // Calls log with message on Error objects
 
             logStub.calledOnce.should.be.true;
-            logStub.firstCall.calledWith(chalk.red('\nERROR:', message), '\n', chalk.white(message), '\n').should.be.true;
+            logStub.firstCall.calledWith('\nERROR:'.red, message.red, '\n', message.white, '\n').should.be.true;
         });
 
         it('logs promise errors and redirects', function (done) {
@@ -265,7 +268,7 @@ describe('Error handling', function () {
             }, errors.logErrorWithRedirect('test1', null, null, '/testurl', req, res));
 
             Promise.reject().catch(function () {
-                logStub.calledWith(chalk.red('\nERROR:', 'test1')).should.equal(true);
+                logStub.calledWith('\nERROR:'.red, 'test1'.red).should.equal(true);
                 logStub.restore();
 
                 redirectStub.calledWith('/testurl').should.equal(true);

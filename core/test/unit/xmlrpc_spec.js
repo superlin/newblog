@@ -4,8 +4,7 @@ var nock            = require('nock'),
     should          = require('should'),
     sinon           = require('sinon'),
     testUtils       = require('../utils'),
-    xmlrpc          = require('../../server/data/xml/xmlrpc'),
-    events          = require('../../server/events'),
+    xmlrpc          = require('../../server/xmlrpc'),
     // storing current environment
     currentEnv      = process.env.NODE_ENV;
 
@@ -30,14 +29,11 @@ describe('XMLRPC', function () {
     it('should execute two pings', function () {
         var ping1 = nock('http://blogsearch.google.com').post('/ping/RPC2').reply(200),
             ping2 = nock('http://rpc.pingomatic.com').post('/').reply(200),
-            testPost = {
-                toJSON: function () {
-                    return testUtils.DataGenerator.Content.posts[2];
-                }
-            };
+            testPost = testUtils.DataGenerator.Content.posts[2];
 
-        xmlrpc.init();
-        events.emit('post.published', testPost);
+        /*jshint unused:false */
+
+        xmlrpc.ping(testPost);
         ping1.isDone().should.be.true;
         ping2.isDone().should.be.true;
     });

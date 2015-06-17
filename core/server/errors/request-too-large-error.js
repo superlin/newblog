@@ -5,7 +5,7 @@ function RequestEntityTooLargeError(message) {
     this.message = message;
     this.stack = new Error().stack;
     this.code = 413;
-    this.errorType = this.name;
+    this.type = this.name;
 }
 
 RequestEntityTooLargeError.prototype = Object.create(Error.prototype);

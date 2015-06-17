@@ -335,7 +335,7 @@ describe('Importer', function () {
             JSONHandler.loadFile(file).then(function () {
                 done(new Error('Didn\'t error for bad db api wrapper'));
             }).catch(function (response) {
-                response.errorType.should.equal('BadRequestError');
+                response.type.should.equal('BadRequestError');
                 done();
             }).catch(done);
         });

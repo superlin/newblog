@@ -6,7 +6,7 @@ var templates     = {},
 
 // Execute a template helper
 // All template helpers are register as partial view.
-templates.execute = function (name, context, options) {
+templates.execute = function (name, context) {
     var partial = hbs.handlebars.partials[name];
 
     if (partial === undefined) {
@@ -19,7 +19,7 @@ templates.execute = function (name, context, options) {
         hbs.registerPartial(partial);
     }
 
-    return new hbs.handlebars.SafeString(partial(context, options));
+    return new hbs.handlebars.SafeString(partial(context));
 };
 
 // Given a theme object and a post object this will return
@@ -44,21 +44,21 @@ templates.getThemeViewForPost = function (themePaths, post) {
     return view;
 };
 
-// Given a theme object and a slug this will return
+// Given a theme object and a tag slug this will return
 // which theme template page should be used.
 // If no default or custom tag template exists then 'index'
 // will be returned
-// If no custom template exists but a default does then
-// the default will be returned
-// If given a slug and a custom template
+// If no custom tag template exists but a default does then
+// 'tag' will be returned
+// If given a tag slug and a custom tag template
 // exits it will return that view.
-templates.getThemeViewForChannel = function (themePaths, channelName, slug) {
-    var customChannelView = channelName + '-' + slug,
-        view = channelName;
+templates.getThemeViewForTag = function (themePaths, tag) {
+    var customTagView = 'tag-' + tag,
+        view = 'tag';
 
-    if (themePaths.hasOwnProperty(customChannelView + '.hbs')) {
-        view = customChannelView;
-    } else if (!themePaths.hasOwnProperty(channelName + '.hbs')) {
+    if (themePaths.hasOwnProperty(customTagView + '.hbs')) {
+        view = customTagView;
+    } else if (!themePaths.hasOwnProperty('tag.hbs')) {
         view = 'index';
     }
 

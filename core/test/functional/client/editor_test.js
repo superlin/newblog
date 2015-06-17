@@ -40,7 +40,7 @@ CasperTest.begin('Ghost editor functions correctly', 20, function suite(test) {
     // Part 2: Test saving with data
     casper.then(function createTestPost() {
         casper.sendKeys('#entry-title', testPost.title, {reset: true});
-        casper.writeContentToEditor(testPost.html);
+        casper.writeContentToCodeMirror(testPost.html);
     });
 
     // TODO: Expand markdown tests to cover more markdown, and keyboard shortcuts
@@ -82,36 +82,33 @@ CasperTest.begin('Ghost editor functions correctly', 20, function suite(test) {
         }, trimmedTitle, 'Entry title should match expected value.');
     });
 
-    // Reset the editor
-    casper.thenOpenAndWaitForPageLoad('editor', function testWordCount() {
-        // Part 4: Word count and plurality
-        casper.then(function checkZeroPlural() {
-            test.assertSelectorHasText('.entry-word-count', '0 words', 'count of 0 produces plural "words".');
-        });
+    // Part 4: Word count and plurality
+    casper.then(function checkZeroPlural() {
+        test.assertSelectorHasText('.entry-word-count', '0 words', 'count of 0 produces plural "words".');
+    });
 
-        casper.then(function () {
-            casper.writeContentToEditor('test');
-        });
+    casper.then(function () {
+        casper.writeContentToCodeMirror('test');
+    });
 
-        casper.waitForSelectorTextChange('.entry-word-count', function onSuccess() {
-            test.assertSelectorHasText('.entry-word-count', '1 word', 'count of 1 produces singular "word".');
-        });
+    casper.waitForSelectorTextChange('.entry-word-count', function onSuccess() {
+        test.assertSelectorHasText('.entry-word-count', '1 word', 'count of 1 produces singular "word".');
+    });
 
-        casper.then(function () {
-            casper.writeContentToEditor('test');
-        });
+    casper.then(function () {
+        casper.writeContentToCodeMirror('test'); // append another word, assumes newline
+    });
 
-        casper.waitForSelectorTextChange('.entry-word-count', function onSuccess() {
-            test.assertSelectorHasText('.entry-word-count', '2 words', 'count of 2 produces plural "words".');
-        });
+    casper.waitForSelectorTextChange('.entry-word-count', function onSuccess() {
+        test.assertSelectorHasText('.entry-word-count', '2 words', 'count of 2 produces plural "words".');
+    });
 
-        casper.then(function () {
-            casper.writeContentToEditor('even **more** words'); // append another word, assumes newline
-        });
+    casper.then(function () {
+        casper.writeContentToCodeMirror('even **more** words'); // append another word, assumes newline
+    });
 
-        casper.waitForSelectorTextChange('.entry-word-count', function onSuccess() {
-            test.assertSelectorHasText('.entry-word-count', '5 words', 'count of 5 produces plural "words".');
-        });
+    casper.waitForSelectorTextChange('.entry-word-count', function onSuccess() {
+        test.assertSelectorHasText('.entry-word-count', '5 words', 'count of 5 produces plural "words".');
     });
 
     // Part 5: Editor global shortcuts
@@ -157,15 +154,15 @@ CasperTest.begin('Image Uploads', 24, function suite(test) {
 
     // Test standard image upload modal
     casper.then(function testImage() {
-        casper.writeContentToEditor('![some text]()');
+        casper.writeContentToCodeMirror('![some text]()');
     });
 
     casper.waitForSelectorTextChange('.entry-preview .rendered-markdown', function onSuccess() {
         test.assertEvalEquals(function () {
-            return document.querySelector('.entry-markdown-content textarea').value;
-        }, '![some text]()\n', 'Editor value is correct');
+            return document.querySelector('.CodeMirror-wrap textarea').value;
+        }, '![some text]()', 'Editor value is correct');
 
-        test.assertHTMLEquals('<section class=\"js-drop-zone image-uploader\">' +
+        test.assertHTMLEquals('<section id=\"image_upload_1\" class=\"js-drop-zone image-uploader\">' +
         '<span class=\"media\"><span class=\"hidden\">Image Upload</span></span>' +
         '<img class=\"js-upload-target\" style=\"display: none; \" src=\"\">' +
         '<div class=\"description\">Add image of <strong>some text</strong></div>' +
@@ -210,7 +207,7 @@ CasperTest.begin('Image Uploads', 24, function suite(test) {
 
     casper.then(function () {
         var markdownImageString = '![](' + testFileLocation + ')';
-        casper.writeContentToEditor(markdownImageString);
+        casper.writeContentToCodeMirror(markdownImageString);
     });
 
     casper.waitForSelector('.entry-preview .js-drop-zone.pre-image-uploader', function onSuccess() {
@@ -230,7 +227,7 @@ CasperTest.begin('Image Uploads', 24, function suite(test) {
     });
 
     casper.then(function () {
-        casper.writeContentToEditor('![]()');
+        casper.writeContentToCodeMirror('![]()');
     });
 
     casper.waitForSelector('.entry-preview .js-drop-zone.image-uploader', function onSuccess() {
@@ -263,7 +260,7 @@ CasperTest.begin('Image Uploads', 24, function suite(test) {
     casper.thenClick('.content-preview a.post-edit');
 
     casper.then(function () {
-        casper.writeContentToEditor('abcdefghijklmnopqrstuvwxyz');
+        casper.writeContentToCodeMirror('abcdefghijklmnopqrstuvwxyz');
     });
 
     casper.waitForSelectorTextChange('.entry-preview .rendered-markdown', function onSuccess() {
@@ -326,11 +323,11 @@ CasperTest.begin('Publish menu - new post', 10, function suite(test) {
     // Fill headline and content
     casper.then(function fillContent() {
         casper.sendKeys('#entry-title', 'Headline');
-        casper.writeContentToEditor('Just a bit of test text');
+        casper.writeContentToCodeMirror('Just a bit of test text');
     });
 
     casper.then(function switchMenuToPublish() {
-        // Open the publish options menu;
+       // Open the publish options menu;
         casper.thenClick('.js-publish-splitbutton .dropdown-toggle');
 
         casper.waitForOpaque('.js-publish-splitbutton .open');
@@ -359,62 +356,6 @@ CasperTest.begin('Publish menu - new post', 10, function suite(test) {
     });
 });
 
-CasperTest.begin('Publish menu - new page', 10, function suite(test) {
-    casper.thenOpenAndWaitForPageLoad('editor', function testTitleAndUrl() {
-        test.assertTitle('Editor - Test Blog', 'Ghost admin has incorrect title');
-        test.assertUrlMatch(/ghost\/editor\/$/, 'Landed on the correct URL');
-    });
-
-    // ... check default option status, label, class
-    casper.then(function () {
-        test.assertExists('.js-publish-splitbutton');
-        test.assertExists('.js-publish-button');
-        test.assertExists('.js-publish-button.btn-blue');
-        test.assertSelectorHasText('.js-publish-button', 'Save Draft');
-    });
-
-    // Fill headline and content
-    casper.then(function fillContent() {
-        casper.sendKeys('#entry-title', 'Page Headline');
-        casper.writeContentToEditor('There once was a page, this was it');
-    });
-
-    // Open post settings menu
-    casper.thenClick('.post-settings');
-
-    // Check the checkbox is checked
-    casper.thenClick('label[for=static-page]');
-
-    casper.then(function switchMenuToPublish() {
-        // Open the publish options menu;
-        casper.thenClick('.js-publish-splitbutton .dropdown-toggle');
-
-        casper.waitForOpaque('.js-publish-splitbutton .open');
-
-        // Select the publish post button
-        casper.thenClick('.js-publish-splitbutton li:first-child a');
-
-        // ... check status, label, class
-        casper.waitForSelector('.js-publish-splitbutton', function onSuccess() {
-            test.assertExists('.js-publish-button.btn-red', 'Publish button should have .btn-red');
-            test.assertSelectorHasText('.js-publish-button', 'Publish Now');
-        }, function onTimeout() {
-            test.assert(false, 'Publish split button works');
-        });
-    });
-
-    // Do publish
-    casper.thenClick('.js-publish-button');
-
-    // ... check status, label, class
-    casper.waitForSelector('.js-publish-splitbutton', function onSuccess() {
-        test.assertExists('.js-publish-button.btn-blue', 'Update button should have .btn-blue');
-        test.assertSelectorHasText('.js-publish-button', 'Update Page');
-    }, function onTimeout() {
-        test.assert(false, 'Publish split button works');
-    });
-});
-
 CasperTest.begin('Publish menu - existing post', 23, function suite(test) {
     // Create a post, save it and test refreshed editor
     casper.thenOpenAndWaitForPageLoad('editor', function testTitleAndUrl() {
@@ -433,7 +374,7 @@ CasperTest.begin('Publish menu - existing post', 23, function suite(test) {
 
     casper.then(function createTestPost() {
         casper.sendKeys('#entry-title', testPost.title);
-        casper.writeContentToEditor(testPost.html);
+        casper.writeContentToCodeMirror(testPost.html);
     });
 
     casper.waitForSelectorTextChange('.entry-preview .rendered-markdown', function onSuccess() {
@@ -596,7 +537,7 @@ CasperTest.begin('Publish menu - new post status is correct after failed save', 
     });
 
     casper.then(function switchMenuToPublish() {
-        // Open the publish options menu;
+       // Open the publish options menu;
         casper.thenClick('.js-publish-splitbutton .dropdown-toggle');
 
         casper.waitForOpaque('.js-publish-splitbutton .open');
@@ -638,7 +579,7 @@ CasperTest.begin('Publish menu - existing post status is correct after failed sa
     // Fill title and content
     casper.then(function writePost() {
         casper.sendKeys('#entry-title', 'a valid title');
-        casper.writeContentToEditor('body content');
+        casper.writeContentToCodeMirror('body content');
     });
 
     // save
@@ -718,7 +659,7 @@ CasperTest.begin('Title input is set correctly after using the Post-Settings-Men
     // add a new post
     casper.then(function fillContent() {
         casper.sendKeys('#entry-title', 'post title', {reset: true});
-        casper.writeContentToEditor('Just a bit of test text');
+        casper.writeContentToCodeMirror('Just a bit of test text');
     });
 
     // save draft
@@ -765,7 +706,7 @@ CasperTest.begin('Editor content is set correctly after using the Post-Settings-
     // add a new post
     casper.then(function fillContent() {
         casper.sendKeys('#entry-title', 'post title');
-        casper.writeContentToEditor('Just a bit of test text');
+        casper.writeContentToCodeMirror('Just a bit of test text');
     });
 
     // save draft
@@ -775,7 +716,7 @@ CasperTest.begin('Editor content is set correctly after using the Post-Settings-
 
     // change the content
     casper.then(function updateContent() {
-        casper.writeContentToEditor('updated content');
+        casper.writeContentToCodeMirror('updated content');
         casper.click('#entry-title');
     });
 

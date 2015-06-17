@@ -5,7 +5,6 @@
 
 var path          = require('path'),
     Promise       = require('bluebird'),
-    chalk         = require('chalk'),
     crypto        = require('crypto'),
     fs            = require('fs'),
     url           = require('url'),
@@ -109,10 +108,7 @@ function configureDriver(client) {
  */
 ConfigManager.prototype.set = function (config) {
     var localPath = '',
-        defaultStorage = 'local-file-store',
         contentPath,
-        activeStorage,
-        storagePath,
         subdir,
         assetHash;
 
@@ -155,18 +151,6 @@ ConfigManager.prototype.set = function (config) {
         knexInstance = knex(this._config.database);
     }
 
-    // Protect against accessing a non-existant object.
-    // This ensures there's always at least a storage object
-    // because it's referenced in multiple places.
-    this._config.storage = this._config.storage || {};
-    activeStorage = this._config.storage.active || defaultStorage;
-
-    if (activeStorage === defaultStorage) {
-        storagePath = path.join(corePath, '/server/storage/');
-    } else {
-        storagePath = path.join(contentPath, 'storage');
-    }
-
     _.merge(this._config, {
         database: {
             knex: knexInstance
@@ -178,8 +162,6 @@ ConfigManager.prototype.set = function (config) {
             config:           this._config.paths.config || path.join(appRoot, 'config.js'),
             configExample:    path.join(appRoot, 'config.example.js'),
             corePath:         corePath,
-
-            storage:          path.join(storagePath, activeStorage),
 
             contentPath:      contentPath,
             themePath:        path.resolve(contentPath, 'themes'),
@@ -194,21 +176,11 @@ ConfigManager.prototype.set = function (config) {
 
             availableThemes:  this._config.paths.availableThemes || {},
             availableApps:    this._config.paths.availableApps || {},
-            clientAssets:     path.join(corePath, '/built/assets/')
-        },
-        storage: {
-            active: activeStorage
+            builtScriptPath:  path.join(corePath, 'built/scripts/')
         },
         theme: {
             // normalise the URL by removing any trailing slash
             url: this._config.url ? this._config.url.replace(/\/$/, '') : ''
-        },
-        routeKeywords: {
-            tag: 'tag',
-            author: 'author',
-            page: 'page',
-            preview: 'p',
-            private: 'private'
         },
         slugs: {
             // Used by generateSlug to generate slugs for posts, tags, users, ..
@@ -255,9 +227,8 @@ ConfigManager.prototype.load = function (configFilePath) {
     /* Check for config file and copy from config.example.js
         if one doesn't exist. After that, start the server. */
     return new Promise(function (resolve, reject) {
-        fs.stat(self._config.paths.config, function (err) {
-            var exists = (err) ? false : true,
-                pendingConfig;
+        fs.exists(self._config.paths.config, function (exists) {
+            var pendingConfig;
 
             if (!exists) {
                 pendingConfig = self.writeFile();
@@ -279,9 +250,8 @@ ConfigManager.prototype.writeFile = function () {
         configExamplePath = this._config.paths.configExample;
 
     return new Promise(function (resolve, reject) {
-        fs.stat(configExamplePath, function checkTemplate(err) {
-            var templateExists = (err) ? false : true,
-                read,
+        fs.exists(configExamplePath, function checkTemplate(templateExists) {
+            var read,
                 write,
                 error;
 
@@ -425,7 +395,7 @@ ConfigManager.prototype.displayDeprecated = function (item, properties, address)
         if (properties.length) {
             return self.displayDeprecated(item[property], properties, address);
         }
-        errorText = 'The configuration property [' + chalk.bold(address.join('.')) + '] has been deprecated.';
+        errorText = 'The configuration property [' + address.join('.').bold + '] has been deprecated.';
         explanationText =  'This will be removed in a future version, please update your config.js file.';
         helpText = 'Please check http://support.ghost.org/config for the most up-to-date example.';
         errors.logWarn(errorText, explanationText, helpText);
