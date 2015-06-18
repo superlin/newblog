@@ -3,6 +3,8 @@
 
 原来的Ghost博客版本为0.5.1，现在Ghost博客已经升级到0.5.10，新版本的Ghost相对于原来的版本有了很多的新功能，包括标签编辑、SEO等多个选项，新的特性是吸引人的，因此我也觉得升级我的博客到最新的0.5.10。
 
+博客再次升级至0.6.4，主要是喜欢博文预览的功能
+
 ###1.数据备份
 
 Ghost的所有数据都存在`/content`下，`/content/data`下为数据库文件，`/content/images`下为所有的图片文件，`/content/themes`下为主题文件，将这些文件备份。
@@ -233,6 +235,8 @@ postLookup.include = 'author,tags,fields,next,previous';
       {{/if}}
 </nav>
 ```
+
+此功能已经过时，新版ghost增加了上下篇链接的helper
 
 ####3.5.归档（archives）
 
