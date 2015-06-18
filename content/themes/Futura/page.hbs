@@ -34,16 +34,16 @@
         </div>
         {{!-- 前一篇和后一篇 --}}
         <nav class="row">
-            {{#if previous}}
+            {{#prev_post}}
             <div class="col-md-6">
-                <a href="{{previous.url}}" title="Previous Post"><i class="fa fa-chevron-left"></i> {{previous.title}}</a>
+                <a href="{{url}}" title="Previous Post"><i class="fa fa-chevron-left"></i> {{title}}</a>
             </div>
-            {{/if}}
-            {{#if next}}
+            {{/#prev_post}}
+            {{#next_post}}
             <div class="col-md-6" style="text-align:right; float: right">
-                <a href="{{next.url}}" title="Previous Post">{{next.title}} <i class="fa fa-chevron-right"></i></a>
+                <a href="{{url}}" title="Previous Post">{{title}} <i class="fa fa-chevron-right"></i></a>
             </div>
-            {{/if}}
+            {{/#next_post}}
         </nav>
         {{!-- 标签 --}}
         <footer class="post-footer clearfix">
