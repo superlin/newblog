@@ -24,7 +24,7 @@ $(document).ready(function () {
             }
         }
         html = '<div class="widget catalog-brief">' +
-        '<h4 class="title">Content</h4>' +
+        '<h4 class="title">内容</h4>' +
         "<ul>" + html + "</ul>" +
         '</div>';
         sidebar.append(html);
