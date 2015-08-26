@@ -39,11 +39,11 @@ meta_title = function (options) {
 
     if (this.relativeUrl){
         if(this.relativeUrl === '/contact/'){
-            title = 'Contact Me - ' + blog.title;
+            title = '联系我 - ' + blog.title;
         } else if(this.relativeUrl === '/about/') {
-            title = 'About - ' + blog.title;
+            title = '关于 - ' + blog.title;
         } else if(this.relativeUrl === '/archives/'){
-            title = 'Archives - ' + blog.title;
+            title = '归档 - ' + blog.title;
         }
     }
     return filters.doFilter('meta_title', title).then(function (title) {
