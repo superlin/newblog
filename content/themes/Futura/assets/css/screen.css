@@ -218,7 +218,8 @@ pre {
 }
 .main-navigation .menu li a {
   color: #505050;
-  line-height: 4em;
+  font-size: 18px;
+  line-height: 3em;
   display: block;
   padding: 0 21px;
   font-family: 'Roboto Slab', 'Helvetica Neue', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Microsoft Yahei', sans-serif;

@@ -11,9 +11,9 @@
             {{name}}
         </h3>
         <div class="meta-info">
-            <span class="post-count"><i class="fa fa-pencil-square-o"></i>{{plural ../pagination.total empty='No posts' singular='% post' plural='% posts'}}</span>
+            <span class="post-count"><i class="fa fa-pencil-square-o"></i>{{plural ../pagination.total empty='0' singular='%' plural='%'}}篇文章</span>
             {{#if location}}<span class="loaction"><i class="fa fa-map-marker"></i>{{location}}</span>{{/if}}
-            {{#if website}}<span class="website"><i class="fa fa-globe"></i><a href="{{website}}" targer="_BLANK">Website</a></span>{{/if}}
+            {{#if website}}<span class="website"><i class="fa fa-globe"></i><a href="{{website}}" targer="_BLANK">主页</a></span>{{/if}}
         </div>
         {{#if bio}}<div class="bio">{{bio}}</div>{{/if}}
     </div>

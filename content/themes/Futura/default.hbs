@@ -68,11 +68,11 @@
                     </div>
                     <div class="collapse navbar-collapse" id="main-menu">
                         <ul class="menu">
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/archives/">Archives</a></li>
-                            <li><a href="{{asset "resume/index.html"}}" target="_blank">Resume</a></li>
+                            <li><a href="/">首页</a></li>
+                            <li><a href="/archives/">归档</a></li>
+                            <li><a href="{{asset "resume/index.html"}}" target="_blank">简历</a></li>
                             <!--<li><a href="/about/">About</a></li>-->
-                            <li><a href="/contact/">Contact</a></li>
+                            <li><a href="/contact/">联系</a></li>
                         </ul>
                     </div>
                 </div>
@@ -94,20 +94,20 @@
                 <aside class="col-md-4 sidebar">
                     <!-- start widget -->
                     <div class="widget">
-                        <h4 class="title">Recent Posts</h4>
+                        <h4 class="title">最近文章</h4>
                         {{recent_posts}}
                     </div>
                     <!-- end widget -->
                     <!-- start tag cloud widget -->
                     <div class="widget">
-                        <h4 class="title">Tags</h4>
+                        <h4 class="title">标签</h4>
                         {{!-- <div class="content tag-cloud"></div> --}}
                         {{tag_cloud limit=20}}
                     </div>
                     <!-- end tag cloud widget -->
                     <!-- start widget -->
                     <div class="widget">
-                        <h4 class="title">Follow</h4>
+                        <h4 class="title">关注</h4>
                         <div class="content">
                           <ul class="social">
                             <li><a href="http://weibo.com/wlliu1990"><i class="fa fa-weibo"></i></a></li>
@@ -127,9 +127,9 @@
         <div id="setting_panel">
             <a href="" id="setting_panel_toggle"><i class="fa fa-tint"></i></a>
             <div id="picker_holder"></div>
-            <a class="dp-button dfc-bt" id="default_color">Default Color</a>
-            <a class="dp-button sb-bt" id="left_sb">Sidebar Left</a>
-            <a class="dp-button sb-bt active" id="right_sb">Sidebar Right</a>
+            <a class="dp-button dfc-bt" id="default_color">默认颜色</a>
+            <a class="dp-button sb-bt" id="left_sb">边栏居左</a>
+            <a class="dp-button sb-bt active" id="right_sb">边栏居右</a>
         </div>
     </section>
 
@@ -141,7 +141,7 @@
                 <div class="col-sm-4">
                     <!-- start widget -->
                     <div class="widget">
-                        <h4 class="title">Recent Posts</h4>
+                        <h4 class="title">最近文章</h4>
                         {{recent_posts limit=4}}
                     </div>
                     <!-- end widget -->
@@ -151,7 +151,7 @@
                 <div class="col-sm-4">
                     <!-- start tag cloud widget -->
                     <div class="widget">
-                        <h4 class="title">Tags</h4>
+                        <h4 class="title">标签</h4>
                         {{tag_cloud limit=20}}
                     </div>
                     <!-- end tag cloud widget -->
@@ -161,7 +161,7 @@
                 <div class="col-sm-4">
                     <!-- start widget -->
                     <div class="widget">
-                        <h4 class="title">Links</h4>
+                        <h4 class="title">链接</h4>
                         <div class="content tag-cloud">
                             <a href="http://www.smashingmagazine.com/" title="Smashing Magazine" target="_blank">Smashing</a>
                             <a href="http://www.html5rocks.com/zh/" title="Html5rocks" target="_blank">Html5rocks</a>

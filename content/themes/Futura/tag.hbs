@@ -6,10 +6,10 @@
     <div class="cover tag-cover">
         {{#if tag.image}}<img src="{{tag.image}}" alt="Tag Cover">{{/if}}
         <h3 class="tag-name">
-            Tag: {{tag.name}}
+            标签: {{tag.name}}
         </h3>
         <div class="post-count">
-            Total {{plural pagination.total empty='No posts' singular='% post' plural='% posts'}}
+            共 {{plural pagination.total empty='0' singular='% ' plural='% '}} 篇文章
         </div>
     </div>
 
