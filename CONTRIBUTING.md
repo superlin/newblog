@@ -12,7 +12,6 @@ you get started quickly and easily. If you need help with anything, please come 
 - [community guidelines](https://ghost.org/about/guidelines/)
 - [dev blog](http://dev.ghost.org)
 
-
 ### TL;DR
 
 If you need help with Ghost or have questions, please use [slack](https://ghost.org/slack) (documentation is [here](http://support.ghost.org)). If you're [raising a bug](#bugs) please be sure to [include as much info as possible](#bug-template) so that we can fix it! If you've got some code you want to [pull request](#pull-requests) please [squash commits](https://github.com/TryGhost/Ghost/wiki/Git-workflow#wiki-clean-up-history), use this [commit message format](https://github.com/TryGhost/Ghost/wiki/Git-workflow#commit-messages) and check it passes the tests by running `grunt validate`. Thanks for helping us make Ghost better.
